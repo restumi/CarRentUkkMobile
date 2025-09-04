@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,6 +23,15 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
       ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
     }
+  }
+
+  void _handleRegist() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const RegisterScreen()
+        )
+    );
   }
 
   InputDecoration _inputDecoration(
@@ -59,17 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // ===== HEADER =====
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset(
-              "assets/images/headerAuth.png",
-              width: MediaQuery.of(context).size.width * 0.8,
-              fit: BoxFit.cover,
-            ),
-          ),
-
           // ===== Content =====
           SingleChildScrollView(
             child: Padding(
@@ -158,9 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //   ===== text "dont have an account" =====
                   Row(
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.505,
-                      ),
+                      const Spacer(flex: 1,),
                       Text(
                         "Don't have an account?",
                         style: GoogleFonts.rubik(
@@ -206,9 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // ===== Register button =====
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: pindah ke register page
-                          },
+                          onPressed: _handleRegist,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(
                               255,
@@ -246,6 +241,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+
+          // ===== HEADER =====
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/headerAuth.png",
+              width: MediaQuery.of(context).size.width * 0.8,
+              fit: BoxFit.cover,
             ),
           ),
         ],

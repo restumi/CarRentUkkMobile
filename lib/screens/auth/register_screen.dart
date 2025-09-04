@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'login_screen.dart';
+import 'verify_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,23 +15,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController =TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   void _submitRegister() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Register logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Register berhasil!")),
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VerificationScreen(
+                name: _nameController.text,
+                email: _emailController.text,
+                password: _passwordController.text,
+                passwordConfirmation: _confirmPasswordController.text,
+            ),
+        )
       );
     }
   }
 
-  InputDecoration _inputDecoration(String label, IconData icon,
-      {Widget? suffixIcon}) {
+  void _handleLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
+
+  InputDecoration _inputDecoration(
+    String label,
+    IconData icon, {
+    Widget? suffixIcon,
+  }) {
     return InputDecoration(
       labelText: label,
       labelStyle: GoogleFonts.rubik(color: Colors.white70),
@@ -60,17 +79,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // ===== HEADER =====
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset(
-              "assets/images/headerAuth.png",
-              width: MediaQuery.of(context).size.width * 0.8,
-              fit: BoxFit.cover,
-            ),
-          ),
-
           // ===== CONTENT =====
           SingleChildScrollView(
             child: Padding(
@@ -211,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // ===== TEXT "Already a member?" =====
                   Row(
                     children: [
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.50),
+                      const Spacer(flex: 1),
                       Text(
                         "Already a member?",
                         style: GoogleFonts.rubik(
@@ -231,8 +239,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: ElevatedButton(
                           onPressed: _submitRegister,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 0, 100, 249),
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              0,
+                              100,
+                              249,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -253,12 +265,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // Log In button
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Pindah ke login screen
-                          },
+                          onPressed: _handleLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 0, 100, 249),
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              0,
+                              100,
+                              249,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -289,6 +303,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          // ===== HEADER =====
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/headerAuth.png",
+              width: MediaQuery.of(context).size.width * 0.8,
+              fit: BoxFit.cover,
             ),
           ),
         ],
