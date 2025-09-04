@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
-  void _submitLogin() {
+  void _submitRegister() {
     if (_formKey.currentState!.validate()) {
-      // TODO: login logic
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
+      // TODO: Register logic
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Register berhasil!")),
+      );
     }
   }
 
-  InputDecoration _inputDecoration(
-    String label,
-    IconData icon, {
-    Widget? suffixIcon,
-  }) {
+  InputDecoration _inputDecoration(String label, IconData icon,
+      {Widget? suffixIcon}) {
     return InputDecoration(
       labelText: label,
       labelStyle: GoogleFonts.rubik(color: Colors.white70),
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-          // ===== Content =====
+          // ===== CONTENT =====
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Text(
-                        "Login to your account",
+                        "Create your account",
                         style: GoogleFonts.rubik(
                           color: Colors.white,
                           fontSize: 16,
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 40),
 
                   // ===== FORM =====
                   Form(
@@ -109,6 +110,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       children: [
+                        // Name
+                        TextFormField(
+                          controller: _nameController,
+                          style: GoogleFonts.rubik(color: Colors.white),
+                          decoration: _inputDecoration("Name", Icons.person),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Name tidak boleh kosong";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Email
                         TextFormField(
                           controller: _emailController,
                           style: GoogleFonts.rubik(color: Colors.white),
@@ -121,6 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+
+                        // Password
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
@@ -149,20 +167,53 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 16),
+
+                        // Confirm Password
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: _obscureConfirmPassword,
+                          style: GoogleFonts.rubik(color: Colors.white),
+                          decoration: _inputDecoration(
+                            "Confirm password",
+                            Icons.lock,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Konfirmasi password tidak boleh kosong";
+                            }
+                            if (value != _passwordController.text) {
+                              return "Password tidak sama";
+                            }
+                            return null;
+                          },
+                        ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 40),
 
-                  //   ===== text "dont have an account" =====
+                  // ===== TEXT "Already a member?" =====
                   Row(
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.505,
-                      ),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.50),
                       Text(
-                        "Don't have an account?",
+                        "Already a member?",
                         style: GoogleFonts.rubik(
                           color: Colors.white70,
                           fontSize: 12,
@@ -175,24 +226,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   // ===== BUTTONS =====
                   Row(
                     children: [
-                      // ===== Login button =====
+                      // Register button
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: _submitLogin,
+                          onPressed: _submitRegister,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              0,
-                              100,
-                              249,
-                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 0, 100, 249),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
                           child: Text(
-                            "Log In",
+                            "Register",
                             style: GoogleFonts.rubik(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -203,19 +250,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(width: 16),
 
-                      // ===== Register button =====
+                      // Log In button
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: pindah ke register page
+                            // TODO: Pindah ke login screen
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              0,
-                              100,
-                              249,
-                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 0, 100, 249),
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -225,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Register",
+                                "Log In",
                                 style: GoogleFonts.rubik(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

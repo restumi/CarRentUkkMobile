@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth/login_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TermsScreen extends StatefulWidget {
   const TermsScreen({super.key});
@@ -40,25 +41,29 @@ class _TermsScreenState extends State<TermsScreen> {
             children: [
               // ===== logo =====
               Center(
-                child: Image.asset("assets/images/logoBiru.png", width: 250),
-              ),
-
-              // ===== Title =====
-              const Text(
-                "Terms App",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+                // child: Image.asset("assets/images/logoBiru.png", width: 250),
+                child: Column(
+                    children: [
+                        Image.asset("assets/images/logoBiru.png", width: 180,),
+                        Text(
+                            "Terms App",
+                            style: GoogleFonts.rubik(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                            ),
+                        )
+                    ],
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 50),
 
               // ===== terms text =====
-              const Text(
+              Text(
                 "1. Contoh\n"
                 "Pastikan pengguna menyadari bahwa mereka menyetujui syarat dan ketentuan saat menggunakan aplikasi Anda. ...",
-                style: TextStyle(
+                style: GoogleFonts.rubik(
                   color: Colors.white,
                   fontSize: 14,
                   height: 1.4,
@@ -80,10 +85,10 @@ class _TermsScreenState extends State<TermsScreen> {
                       });
                     },
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Saya telah membaca dan menyetujui peraturan yang tertulis.",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: GoogleFonts.rubik(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ],
@@ -91,13 +96,13 @@ class _TermsScreenState extends State<TermsScreen> {
 
               // ===== warning text =====
               if (showWarning)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(left: 8, top: 4),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "⚠️ Anda harus menyetujui syarat & ketentuan terlebih dahulu",
-                      style: TextStyle(
+                      style: GoogleFonts.rubik(
                         color: Colors.red,
                         fontSize: 12,
                       ),
@@ -121,9 +126,9 @@ class _TermsScreenState extends State<TermsScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "Accept",
-                        style: TextStyle(
+                        style: GoogleFonts.rubik(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

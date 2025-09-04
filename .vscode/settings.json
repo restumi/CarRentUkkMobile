@@ -1,0 +1,9 @@
+{
+    "editor.guides.indentation": true,
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "dart.flutterHotReloadOnSave": "all",
+    "dart.hotReloadOnSave": "all",
+    "dart.previewHotReloadOnSaveWatcher": true,
+    "editor.guides.highlightActiveIndentation": true
+}
