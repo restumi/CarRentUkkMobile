@@ -1,3 +1,4 @@
+import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -22,15 +24,17 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
+    } else {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
     }
   }
 
   void _handleRegist() {
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const RegisterScreen()
-        )
+      context,
+      MaterialPageRoute(builder: (context) => const RegisterScreen()),
     );
   }
 
@@ -41,23 +45,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.rubik(color: Colors.white70),
-      prefixIcon: Icon(icon, color: Colors.white70),
+      labelStyle: GoogleFonts.rubik(color: AppColors.abuGelap),
+      prefixIcon: Icon(icon, color: AppColors.abuGelap),
       suffixIcon: suffixIcon,
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white54),
+        borderSide: const BorderSide(color: AppColors.abuGelap),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color.fromARGB(255, 0, 100, 249)),
+        borderSide: const BorderSide(color: AppColors.blue),
         borderRadius: BorderRadius.circular(12),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide: const BorderSide(color: AppColors.red),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide: const BorderSide(color: AppColors.red),
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -66,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.black,
       body: Stack(
         children: [
           // ===== Content =====
@@ -84,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         "Hello",
                         style: GoogleFonts.rubik(
-                          color: Colors.white,
+                          color: AppColors.abuTerang,
                           fontSize: 60,
                           fontWeight: FontWeight.bold,
                           height: 1,
@@ -93,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         "Login to your account",
                         style: GoogleFonts.rubik(
-                          color: Colors.white,
+                          color: AppColors.abuTerang,
                           fontSize: 16,
                           height: 1,
                         ),
@@ -105,12 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   // ===== FORM =====
                   Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: _autoValidateMode,
                     child: Column(
                       children: [
                         TextFormField(
                           controller: _emailController,
-                          style: GoogleFonts.rubik(color: Colors.white),
+                          style: GoogleFonts.rubik(color: AppColors.abuTerang),
                           decoration: _inputDecoration("Email", Icons.email),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -123,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
-                          style: GoogleFonts.rubik(color: Colors.white),
+                          style: GoogleFonts.rubik(color: AppColors.abuTerang),
                           decoration: _inputDecoration(
                             "Password",
                             Icons.lock,
@@ -132,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _obscurePassword
                                     ? Icons.visibility_off
                                     : Icons.visibility,
-                                color: Colors.white70,
+                                color: AppColors.abuTerang,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -157,11 +161,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   //   ===== text "dont have an account" =====
                   Row(
                     children: [
-                      const Spacer(flex: 1,),
+                      const Spacer(flex: 1),
                       Text(
                         "Don't have an account?",
                         style: GoogleFonts.rubik(
-                          color: Colors.white70,
+                          color: AppColors.abuTerang,
                           fontSize: 12,
                         ),
                       ),
@@ -177,12 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: _submitLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              0,
-                              100,
-                              249,
-                            ),
+                            backgroundColor: AppColors.blue,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -193,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: GoogleFonts.rubik(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: AppColors.abuTerang,
                             ),
                           ),
                         ),
@@ -205,12 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: _handleRegist,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              0,
-                              100,
-                              249,
-                            ),
+                            backgroundColor: AppColors.blue,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -224,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: GoogleFonts.rubik(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: AppColors.abuTerang,
                                 ),
                               ),
                               const SizedBox(width: 8),

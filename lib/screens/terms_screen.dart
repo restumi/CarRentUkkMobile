@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../styles/app_color.dart';
 
 class TermsScreen extends StatefulWidget {
   const TermsScreen({super.key});
@@ -48,7 +49,7 @@ class _TermsScreenState extends State<TermsScreen> {
                         Text(
                             "Terms App",
                             style: GoogleFonts.rubik(
-                                color: Colors.white,
+                                color: AppColors.abuTerang,
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
                                 height: 1,
@@ -64,7 +65,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 "1. Contoh\n"
                 "Pastikan pengguna menyadari bahwa mereka menyetujui syarat dan ketentuan saat menggunakan aplikasi Anda. ...",
                 style: GoogleFonts.rubik(
-                  color: Colors.white,
+                  color: AppColors.abuTerang,
                   fontSize: 14,
                   height: 1.4,
                 ),
@@ -88,7 +89,7 @@ class _TermsScreenState extends State<TermsScreen> {
                   Expanded(
                     child: Text(
                       "Saya telah membaca dan menyetujui peraturan yang tertulis.",
-                      style: GoogleFonts.rubik(color: Colors.white, fontSize: 12),
+                      style: GoogleFonts.rubik(color: AppColors.abuTerang, fontSize: 12),
                     ),
                   ),
                 ],
@@ -103,7 +104,7 @@ class _TermsScreenState extends State<TermsScreen> {
                     child: Text(
                       "⚠️ Anda harus menyetujui syarat & ketentuan terlebih dahulu",
                       style: GoogleFonts.rubik(
-                        color: Colors.red,
+                        color: AppColors.red,
                         fontSize: 12,
                       ),
                     ),
@@ -117,7 +118,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 child: ElevatedButton(
                   onPressed: _handleAccept, // selalu aktif
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 100, 249),
+                    backgroundColor: AppColors.blue,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -129,7 +130,7 @@ class _TermsScreenState extends State<TermsScreen> {
                       Text(
                         "Accept",
                         style: GoogleFonts.rubik(
-                          color: Colors.white,
+                          color: AppColors.abuTerang,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'waiting_page_screen.dart';
 
 class VerificationScreen extends StatefulWidget {
   final String name;
@@ -23,6 +24,7 @@ class VerificationScreen extends StatefulWidget {
 
 class _VerificationScreenState extends State<VerificationScreen> {
   final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -62,13 +64,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
       // TODO: Panggil API create account + verify
       print(requestData);
 
-      ScaffoldMessenger.of(
+      Navigator.pushReplacement(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Create Account berhasil!")));
+        MaterialPageRoute(
+            builder: (context) => const WaitingScreen(),
+        )
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lengkapi semua data & upload gambar!")),
       );
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -134,7 +142,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
                   Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: _autoValidateMode,
                     child: Column(
                       children: [
                         TextFormField(
@@ -150,6 +158,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             }
                             return null;
                           },
+                          onChanged: (_) {
+                            if (_autoValidateMode == AutovalidateMode.always) {
+                              setState(() {});
+                            }
+                          },
                         ),
                         const SizedBox(height: 16),
 
@@ -163,6 +176,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           validator: (value) => value!.isEmpty
                               ? "Nomor telepon tidak boleh kosong"
                               : null,
+                          onChanged: (_) {
+                            if (_autoValidateMode == AutovalidateMode.always) {
+                              setState(() {});
+                            }
+                          },
                         ),
                         const SizedBox(height: 16),
 
@@ -173,6 +191,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           validator: (value) => value!.isEmpty
                               ? "Alamat tidak boleh kosong"
                               : null,
+                          onChanged: (_) {
+                            if (_autoValidateMode == AutovalidateMode.always) {
+                              setState(() {});
+                            }
+                          },
                         ),
                         const SizedBox(height: 16),
 

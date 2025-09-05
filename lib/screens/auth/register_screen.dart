@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login_screen.dart';
 import 'verify_screen.dart';
+import '../../styles/app_color.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,28 +13,33 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   void _submitRegister() {
     if (_formKey.currentState!.validate()) {
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => VerificationScreen(
-                name: _nameController.text,
-                email: _emailController.text,
-                password: _passwordController.text,
-                passwordConfirmation: _confirmPasswordController.text,
-            ),
-        )
+          builder: (context) => VerificationScreen(
+            name: _nameController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+            passwordConfirmation: _confirmPasswordController.text,
+          ),
+        ),
       );
+    } else {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
     }
   }
 
@@ -51,23 +57,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.rubik(color: Colors.white70),
-      prefixIcon: Icon(icon, color: Colors.white70),
+      labelStyle: GoogleFonts.rubik(color: AppColors.abuTerang),
+      prefixIcon: Icon(icon, color: AppColors.abuTerang),
       suffixIcon: suffixIcon,
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white54),
+        borderSide: const BorderSide(color: AppColors.abuGelap),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color.fromARGB(255, 0, 100, 249)),
+        borderSide: const BorderSide(color: AppColors.blue),
         borderRadius: BorderRadius.circular(12),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide: const BorderSide(color: AppColors.red),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide: const BorderSide(color: AppColors.red),
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -115,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // ===== FORM =====
                   Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: _autoValidateMode,
                     child: Column(
                       children: [
                         // Name
