@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
+import 'detail_car_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _goToDetail(BuildContext context) {
-    Navigator.pushNamed(context, '/detail_car');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const DetailCarScreen())    
+    );
   }
 
   @override
@@ -16,7 +20,6 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // ===== Konten utama =====
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -35,7 +38,10 @@ class HomeScreen extends StatelessWidget {
 
                 // ===== Title =====
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 12,
+                  ),
                   child: Text(
                     "Rent a car",
                     style: GoogleFonts.rubik(
@@ -50,7 +56,10 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.abugelap2,
                       borderRadius: BorderRadius.circular(20),
@@ -64,7 +73,9 @@ class HomeScreen extends StatelessWidget {
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               hintText: "Search Car . . .",
-                              hintStyle: GoogleFonts.rubik(color: Colors.white54),
+                              hintStyle: GoogleFonts.rubik(
+                                color: Colors.white54,
+                              ),
                               border: InputBorder.none,
                             ),
                           ),
@@ -79,7 +90,11 @@ class HomeScreen extends StatelessWidget {
                 // ===== List Mobil (scrollable) =====
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.only(left: 24, right: 24, top: 30),
+                    padding: const EdgeInsets.only(
+                      left: 24,
+                      right: 24,
+                      top: 30,
+                    ),
                     itemCount: 6,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -92,59 +107,66 @@ class HomeScreen extends StatelessWidget {
                               Container(
                                 margin: const EdgeInsets.only(top: 20),
                                 height: 100,
-                                padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                                padding: const EdgeInsets.only(
+                                  bottom: 10,
+                                  left: 10,
+                                  right: 10,
+                                ),
                                 decoration: BoxDecoration(
-                                    color: AppColors.abugelap2,
-                                    borderRadius: BorderRadius.circular(16),
+                                  color: AppColors.abugelap2,
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
                                     Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
                                         Text(
-                                            "Porsche Cammon",
-                                            style: GoogleFonts.rubik(
+                                          "Porsche Cammon",
+                                          style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14, // kecilin font
                                             fontWeight: FontWeight.bold,
-                                            ),
+                                          ),
                                         ),
                                         Text(
-                                            "Manual",
-                                            style: GoogleFonts.rubik(
+                                          "Manual",
+                                          style: GoogleFonts.rubik(
                                             color: Colors.white70,
                                             fontSize: 12, // kecilin font
-                                            ),
+                                          ),
                                         ),
-                                        ],
+                                      ],
                                     ),
                                     Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
                                         Text(
-                                            "Rp 1.000.000",
-                                            style: GoogleFonts.rubik(
+                                          "Rp 1.000.000",
+                                          style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
-                                            ),
+                                          ),
                                         ),
                                         Text(
-                                            "Per Day",
-                                            style: GoogleFonts.rubik(
+                                          "Per Day",
+                                          style: GoogleFonts.rubik(
                                             color: Colors.white70,
                                             fontSize: 12,
-                                            ),
+                                          ),
                                         ),
-                                        ],
+                                      ],
                                     ),
-                                    ],
+                                  ],
                                 ),
-                                ),
+                              ),
 
                               // Mobil nongol di atas container
                               Positioned(
@@ -163,7 +185,7 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 50,)
+                const SizedBox(height: 50),
               ],
             ),
 
@@ -173,17 +195,20 @@ class HomeScreen extends StatelessWidget {
               right: 0,
               child: Image.asset(
                 "assets/images/headerHome.png",
-                width: 180,
+                width: MediaQuery.of(context).size.width * 0.4,
               ),
             ),
 
-            // ===== Navbar melayang (3/4 width) =====
+            // ===== Bottom Navbar =====
             Positioned(
               bottom: 0,
-              left: MediaQuery.of(context).size.width * 0.125, // biar center
+              left: MediaQuery.of(context).size.width * 0.125,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.75,
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 30,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xFF0064F9),
                   borderRadius: BorderRadius.all(Radius.circular(30)),
