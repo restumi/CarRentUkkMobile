@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import 'home_screen.dart';
+import 'transaction_screen.dart';
 
 class DetailCarScreen extends StatelessWidget {
   const DetailCarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    void handleBack(){
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen())
+        );
+    }
+
+    void handleBook(){
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TransactionScreen())
+        );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.black,
       body: Stack(
@@ -18,75 +36,91 @@ class DetailCarScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              height: 320, // cukup sampai bawah mobil
-              decoration: const BoxDecoration(
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: const BoxDecoration(
                 color: AppColors.abugelap2,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
                 ),
+                ),
+                child: Stack(
+                children: [
+                    // ===== Header Image =====
+                    Positioned(
+                    top: 30,
+                    right: 0,
+                    child: Image.asset(
+                        "assets/images/headerHome.png",
+                        width: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    ),
+                    
+                    // ===== Konten di dalam SafeArea =====
+                    SafeArea(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // tambah ini
+                        children: [
+                        // ===== Back Button dan Car Details =====
+                        Padding(
+                            padding: const EdgeInsets.only(left: 25),
+                            child: IconButton(
+                            icon: const Icon(
+                                Icons.arrow_back_ios,
+                                color: AppColors.white,
+                                size: 20,
+                            ),
+                            onPressed: handleBack,
+                            ),
+                        ),
+                        const SizedBox(height: 20,),
+
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                const SizedBox(height: 8),
+                                Text(
+                                "Car Details",
+                                style: GoogleFonts.rubik(
+                                    color: AppColors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold
+                                ),
+                                ),
+                                Text(
+                                    "Porsche Cammon",
+                                    style: GoogleFonts.rubik(
+                                        color: AppColors.white,
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                ),
+                            ],
+                            ),
+                        ),
+
+                        Center(
+                            child: Image.asset(
+                            "assets/images/car.png",
+                            width: 270,
+                            ),
+                        ),
+                        const Spacer(), // biar ada space
+                        ],
+                    ),
+                    )
+                ],
               ),
             ),
           ),
 
           SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 120),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ===== Header =====
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: AppColors.white,
-                            size: 20,
-                          ),
-                          onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "Car Details",
-                          style: GoogleFonts.rubik(
-                            color: AppColors.abuGelap,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // ===== Nama mobil =====
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    child: Text(
-                      "Porsche Cammon",
-                      style: GoogleFonts.rubik(
-                        color: AppColors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  // ===== Mobil =====
-                  Center(
-                    child: Image.asset(
-                      "assets/images/car.png",
-                      height: 200,
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.55),
 
                   // ===== Driver Cards =====
                   SizedBox(
@@ -110,7 +144,7 @@ class DetailCarScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _carInfo("Gear", "Matic", Icons.settings),
                           _carInfo("Seats", "6", Icons.event_seat),
@@ -121,17 +155,6 @@ class DetailCarScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-
-          // ===== Header Image positioned =====
-          Positioned(
-            top: 30,
-            right: 0,
-            child: Image.asset(
-              "assets/images/headerHome.png",
-              width: MediaQuery.of(context).size.width * 0.4,
-            ),
-          ),
 
           // ===== Bottom Bar =====
           Positioned(
@@ -139,7 +162,7 @@ class DetailCarScreen extends StatelessWidget {
             right: 20,
             bottom: 12,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.only(right: 3, top: 3, bottom: 3, left: 15),
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(color: AppColors.abuGelap),
@@ -152,29 +175,32 @@ class DetailCarScreen extends StatelessWidget {
                     "Rp 1.000.000 / day",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.blue,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Book now",
-                          style: GoogleFonts.rubik(
-                            color: AppColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: handleBook,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: AppColors.blue,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Book now",
+                            style: GoogleFonts.rubik(
+                              color: AppColors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Image.asset("assets/icons/leftArrow.png", width: 20),
-                      ],
+                          const SizedBox(width: 8),
+                          Image.asset("assets/icons/leftArrow.png", width: 25),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -216,7 +242,7 @@ class DetailCarScreen extends StatelessWidget {
   // ===== Car Info =====
   Widget _carInfo(String title, String value, IconData icon) {
     return Container(
-      width: 115,
+      width: 120,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.abuGelap),
