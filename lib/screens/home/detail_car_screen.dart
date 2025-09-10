@@ -101,10 +101,12 @@ class DetailCarScreen extends StatelessWidget {
                             ),
                         ),
 
+                        const SizedBox(height: 40,),
+
                         Center(
                             child: Image.asset(
                             "assets/images/car.png",
-                            width: 270,
+                            width: 300,
                             ),
                         ),
                         const Spacer(), // biar ada space

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 // import 'screens/terms_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'package:flutter/services.dart';
+
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   runApp(const MyApp());
 }
 
