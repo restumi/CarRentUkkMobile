@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import 'detail_car_screen.dart';
+import '../driver/driver_screen.dart';
+import '../profile/profile_screen.dart';
+import '../../widgets/bottom_navbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,7 +12,21 @@ class HomeScreen extends StatelessWidget {
   void _goToDetail(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const DetailCarScreen())    
+      MaterialPageRoute(builder: (context) => const DetailCarScreen()),
+    );
+  }
+
+  void _goToDriver(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const DriverScreen()),
+    );
+  }
+
+  void _goToProfile(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileScreen()),
     );
   }
 
@@ -199,30 +216,41 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // ===== Bottom Navbar =====
-            Positioned(
-              bottom: 0,
-              left: MediaQuery.of(context).size.width * 0.125,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: 30,
-                ),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0064F9),
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset("assets/icons/home.png", width: 28),
-                    Image.asset("assets/icons/driver.png", width: 28),
-                    Image.asset("assets/icons/profil.png", width: 28),
-                  ],
-                ),
-              ),
+            CustomBottomNavbar(
+              currentIndex: 0,
+              onTap: (index) {
+                if (index == 1) {
+                  _goToDriver(context);
+                } else if (index == 2) {
+                  _goToProfile(context);
+                }
+              },
             ),
+
+            // ===== Bottom Navbar =====
+            // Positioned(
+            //   bottom: 0,
+            //   left: MediaQuery.of(context).size.width * 0.125,
+            //   child: Container(
+            //     width: MediaQuery.of(context).size.width * 0.75,
+            //     padding: const EdgeInsets.symmetric(
+            //       vertical: 20,
+            //       horizontal: 30,
+            //     ),
+            //     decoration: const BoxDecoration(
+            //       color: Color(0xFF0064F9),
+            //       borderRadius: BorderRadius.all(Radius.circular(30)),
+            //     ),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Image.asset("assets/icons/home.png", width: 28),
+            //         Image.asset("assets/icons/driver.png", width: 28),
+            //         Image.asset("assets/icons/profil.png", width: 28),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
