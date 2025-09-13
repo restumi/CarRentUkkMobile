@@ -99,68 +99,94 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.black,
-                            border: Border.all(color: AppColors.abuGelap),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                DateFormat(
-                                  'dd/MM/yyyy',
-                                ).format(_rangeStart ?? _focusDay),
-                                style: GoogleFonts.rubik(
-                                  color: AppColors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.calendar_today,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Start date",
+                              style: GoogleFonts.rubik(
                                 color: AppColors.white,
-                                size: 18,
+                                fontSize: 16,
                               ),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.black,
+                                border: Border.all(color: AppColors.abuGelap),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    DateFormat(
+                                      'dd/MM/yyyy',
+                                    ).format(_rangeStart ?? _focusDay),
+                                    style: GoogleFonts.rubik(
+                                      color: AppColors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.calendar_today,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.black,
-                            border: Border.all(color: AppColors.abuGelap),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                DateFormat(
-                                  'dd/MM/yyyy',
-                                ).format(_rangeEnd ?? _focusDay),
-                                style: GoogleFonts.rubik(
-                                  color: AppColors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.calendar_today,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "End date",
+                              style: GoogleFonts.rubik(
                                 color: AppColors.white,
-                                size: 18,
+                                fontSize: 16,
                               ),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.black,
+                                border: Border.all(color: AppColors.abuGelap),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    DateFormat(
+                                      'dd/MM/yyyy',
+                                    ).format(_rangeEnd ?? _focusDay),
+                                    style: GoogleFonts.rubik(
+                                      color: AppColors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.calendar_today,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -214,7 +240,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         ),
                       ),
 
-                      // ====== calendar style ======  
+                      // ====== calendar style ======
                       calendarStyle: CalendarStyle(
                         outsideDaysVisible: false,
                         defaultTextStyle: GoogleFonts.rubik(
@@ -224,32 +250,28 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           color: AppColors.white,
                         ),
                         rangeStartDecoration: BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
                         ),
                         rangeStartTextStyle: GoogleFonts.rubik(
-                            color: AppColors.blue,
-                            fontWeight: FontWeight.bold,
+                          color: AppColors.blue,
+                          fontWeight: FontWeight.bold,
                         ),
                         rangeEndDecoration: BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
                         ),
                         rangeEndTextStyle: GoogleFonts.rubik(
-                            color: AppColors.blue,
-                            fontWeight: FontWeight.bold,
+                          color: AppColors.blue,
+                          fontWeight: FontWeight.bold,
                         ),
                         rangeHighlightColor: Color.fromARGB(123, 255, 255, 255),
-                        withinRangeTextStyle: GoogleFonts.rubik(color: AppColors.white),
-                        todayDecoration: BoxDecoration(
-                            color: AppColors.white,
-                            shape: BoxShape.circle,
+                        withinRangeTextStyle: GoogleFonts.rubik(
+                          color: AppColors.white,
                         ),
-                        todayTextStyle: GoogleFonts.rubik(
-                            color: AppColors.blue,
-                            fontWeight: FontWeight.bold,
+                        disabledTextStyle: GoogleFonts.rubik(
+                          color: AppColors.abuGelap,
                         ),
-                        disabledTextStyle: GoogleFonts.rubik(color: AppColors.abuGelap) 
                       ),
 
                       // ===== week style =====
@@ -275,7 +297,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         _focusDay = focusedDay;
                       },
                       enabledDayPredicate: (day) {
-                        return day.isAfter(DateTime.now().subtract(const Duration(days: 1)));
+                        return day.isAfter(
+                          DateTime.now().subtract(const Duration(days: 1)),
+                        );
                       },
                     ),
                   ),
