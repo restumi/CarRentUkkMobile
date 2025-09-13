@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 // import 'screens/terms_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'widgets/status_bar_wrapper.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id-ID');
+
   runApp(const MyApp());
 }
 
@@ -22,6 +27,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         home: HomeScreen(),
+
+        localizationsDelegates: const[
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+        ],
       ),
     );
   }

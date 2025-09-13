@@ -13,36 +13,42 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusDay;
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusDay = focusDay;
+      });
+    }
+  }
+
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusDay) {
+    setState(() {
+      _selectedDay = null;
+      _focusDay = focusDay;
+      _rangeStart = start;
+      _rangeEnd = end;
+    });
+  }
+
   void handleBack() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const DetailCarScreen()),
     );
-  }
-
-  bool isChecked = false;
-  DateTime? _startDate;
-  DateTime? _endDate;
-  DateTime today = DateTime.now();
-
-  bool _isDateValid(DateTime date) {
-    return date.isAfter(DateTime.now().subtract(const Duration(days: 1)));
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    setState(() {
-      if (_startDate == null) {
-        _startDate = selectedDay;
-        _endDate = null;
-      } else if (_endDate == null && selectedDay.isAfter(_startDate!)) {
-        _endDate = selectedDay;
-      } else if (selectedDay.isBefore(_startDate!)) {
-        _startDate = selectedDay;
-        _endDate = null;
-      }
-      // Penting: update focusedDay agar kalender tetap di bulan yang relevan
-      today = focusedDay;
-    });
   }
 
   @override
@@ -109,7 +115,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               Text(
                                 DateFormat(
                                   'dd/MM/yyyy',
-                                ).format(_startDate ?? today),
+                                ).format(_rangeStart ?? _focusDay),
                                 style: GoogleFonts.rubik(
                                   color: AppColors.white,
                                   fontSize: 14,
@@ -142,7 +148,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               Text(
                                 DateFormat(
                                   'dd/MM/yyyy',
-                                ).format(_endDate ?? today),
+                                ).format(_rangeEnd ?? _focusDay),
                                 style: GoogleFonts.rubik(
                                   color: AppColors.white,
                                   fontSize: 14,
@@ -170,67 +176,106 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: TableCalendar(
-                      focusedDay: today,
+                      // ===== tanggal =====
                       firstDay: DateTime.utc(2000, 1, 1),
                       lastDay: DateTime.utc(2030, 12, 31),
-                      calendarFormat: CalendarFormat.month,
+                      focusedDay: _focusDay,
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
+                      // ===== format =====
+                      calendarFormat: _calendarFormat,
                       startingDayOfWeek: StartingDayOfWeek.monday,
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                        weekdayStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        weekendStyle: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+
+                      // ===== range =====
+                      onDaySelected: _onDaySelected,
+                      rangeStartDay: _rangeStart,
+                      rangeEndDay: _rangeEnd,
+                      onRangeSelected: _onRangeSelected,
+                      rangeSelectionMode: RangeSelectionMode.toggledOn,
+
+                      // ===== header style =====
                       headerStyle: HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
                         titleTextStyle: GoogleFonts.rubik(
-                          color: Colors.white,
-                          fontSize: 16,
+                          color: AppColors.white,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        formatButtonVisible: false,
                         leftChevronIcon: Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
+                          size: 18,
                         ),
                         rightChevronIcon: Icon(
                           Icons.arrow_forward_ios,
                           color: Colors.white,
+                          size: 18,
                         ),
                       ),
+
+                      // ====== calendar style ======  
                       calendarStyle: CalendarStyle(
                         outsideDaysVisible: false,
-                        defaultTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                        defaultTextStyle: GoogleFonts.rubik(
+                          color: AppColors.white,
                         ),
-                        selectedTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                        weekendTextStyle: GoogleFonts.rubik(
+                          color: AppColors.white,
+                        ),
+                        rangeStartDecoration: BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                        ),
+                        rangeStartTextStyle: GoogleFonts.rubik(
+                            color: AppColors.blue,
+                            fontWeight: FontWeight.bold,
+                        ),
+                        rangeEndDecoration: BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                        ),
+                        rangeEndTextStyle: GoogleFonts.rubik(
+                            color: AppColors.blue,
+                            fontWeight: FontWeight.bold,
+                        ),
+                        rangeHighlightColor: Color.fromARGB(123, 255, 255, 255),
+                        withinRangeTextStyle: GoogleFonts.rubik(color: AppColors.white),
+                        todayDecoration: BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                        ),
+                        todayTextStyle: GoogleFonts.rubik(
+                            color: AppColors.blue,
+                            fontWeight: FontWeight.bold,
+                        ),
+                        disabledTextStyle: GoogleFonts.rubik(color: AppColors.abuGelap) 
+                      ),
+
+                      // ===== week style =====
+                      daysOfWeekStyle: DaysOfWeekStyle(
+                        weekdayStyle: GoogleFonts.rubik(
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                         ),
-                        todayTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                        weekendStyle: GoogleFonts.rubik(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        selectedDecoration: BoxDecoration(
-                          color: AppColors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        todayDecoration: BoxDecoration(
-                          color: const Color.fromARGB(100, 255, 255, 255),
-                          shape: BoxShape.circle,
-                        ),
-                        weekendTextStyle: TextStyle(color: Colors.grey[400]),
                       ),
-                      onDaySelected: _onDaySelected,
+                      locale: 'id-ID',
+                      onFormatChanged: (format) {
+                        if (_calendarFormat != format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        }
+                      },
+                      onPageChanged: (focusedDay) {
+                        _focusDay = focusedDay;
+                      },
                       enabledDayPredicate: (day) {
-                        return _isDateValid(day);
+                        return day.isAfter(DateTime.now().subtract(const Duration(days: 1)));
                       },
                     ),
                   ),
@@ -308,8 +353,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                         ),
                         SizedBox(
-                            height: 20,
-                            width: 20,
+                          height: 20,
+                          width: 20,
                           child: Icon(
                             Icons.arrow_forward_ios,
                             color: AppColors.white,
