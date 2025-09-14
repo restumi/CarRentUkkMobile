@@ -1,5 +1,5 @@
-import 'package:car_rent_mobile_app/screens/home/home_screen.dart';
-import 'package:car_rent_mobile_app/screens/profile/profile_screen.dart';
+import 'package:car_rent_mobile_app/routes/app_route.dart';
+
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,17 +14,11 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   void _goToHome(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.home, arguments: SlideDirection.left);
   }
 
   void _goToProfile(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const ProfileScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.profile);
   }
 
   @override

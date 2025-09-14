@@ -1,7 +1,7 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'detail_car_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -45,10 +45,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   void handleBack() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const DetailCarScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.detailCar, arguments: SlideDirection.left);
   }
 
   @override

@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
-  flutter_localization:
+  flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6
   google_fonts: ^6.3.1

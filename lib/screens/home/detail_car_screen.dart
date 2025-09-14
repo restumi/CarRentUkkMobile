@@ -1,29 +1,19 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
-import 'home_screen.dart';
-import 'transaction_screen.dart';
 
 class DetailCarScreen extends StatelessWidget {
   const DetailCarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    void handleBack(){
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen())
-        );
+    void handleBackToHome() {
+      Navigator.pushNamed(context, AppRouter.home, arguments: SlideDirection.left);
     }
 
-    void handleBook(){
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TransactionScreen())
-        );
+    void handleBookTransaction() {
+      Navigator.pushNamed(context, AppRouter.transaction);
     }
 
     return Scaffold(
@@ -36,127 +26,134 @@ class DetailCarScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                decoration: const BoxDecoration(
+              height: MediaQuery.of(context).size.height * 0.5,
+              decoration: const BoxDecoration(
                 color: AppColors.abugelap2,
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
-                ),
-                child: Stack(
+              ),
+              child: Stack(
                 children: [
-                    // ===== Header Image =====
-                    Positioned(
+                  // ===== Header Image =====
+                  Positioned(
                     top: 30,
                     right: 0,
                     child: Image.asset(
-                        "assets/images/headerHome.png",
-                        width: MediaQuery.of(context).size.width * 0.4,
+                      "assets/images/headerHome.png",
+                      width: MediaQuery.of(context).size.width * 0.4,
                     ),
-                    ),
-                    
-                    // ===== Konten di dalam SafeArea =====
-                    SafeArea(
+                  ),
+
+                  // ===== Konten di dalam SafeArea =====
+                  SafeArea(
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // tambah ini
-                        children: [
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // tambah ini
+                      children: [
                         // ===== Back Button dan Car Details =====
                         Padding(
-                            padding: const EdgeInsets.only(left: 25),
-                            child: IconButton(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: IconButton(
                             icon: const Icon(
-                                Icons.arrow_back_ios,
-                                color: AppColors.white,
-                                size: 20,
+                              Icons.arrow_back_ios,
+                              color: AppColors.white,
+                              size: 20,
                             ),
-                            onPressed: handleBack,
-                            ),
+                            onPressed: handleBackToHome,
+                          ),
                         ),
-                        const SizedBox(height: 20,),
+                        const SizedBox(height: 20),
 
                         Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                                const SizedBox(height: 8),
-                                Text(
+                              const SizedBox(height: 8),
+                              Text(
                                 "Car Details",
                                 style: GoogleFonts.rubik(
-                                    color: AppColors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold
+                                  color: AppColors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              Text(
+                                "Porsche Cammon",
+                                style: GoogleFonts.rubik(
+                                  color: AppColors.white,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Text(
-                                    "Porsche Cammon",
-                                    style: GoogleFonts.rubik(
-                                        color: AppColors.white,
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                ),
+                              ),
                             ],
-                            ),
+                          ),
                         ),
 
-                        const SizedBox(height: 40,),
+                        const SizedBox(height: 40),
 
                         Center(
-                            child: Image.asset(
+                          child: Image.asset(
                             "assets/images/car.png",
                             width: 300,
-                            ),
+                          ),
                         ),
                         const Spacer(), // biar ada space
-                        ],
+                      ],
                     ),
-                    )
+                  ),
                 ],
               ),
             ),
           ),
 
           SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.55),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.55),
 
-                  // ===== Driver Cards =====
-                  SizedBox(
-                    height: 120,
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _driverOption("Without Driver", "assets/images/driver.png"),
-                        _driverOption("Driver Name", "assets/images/driver.png"),
-                        _driverOption("Driver Name", "assets/images/driver.png"),
-                        _driverOption("Driver Name", "assets/images/driver.png"),
-                        _driverOption("Driver Name", "assets/images/driver.png"),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // ===== Info Mobil =====
-                  Padding(
+                // ===== Driver Cards =====
+                SizedBox(
+                  height: 120,
+                  child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _carInfo("Gear", "Matic", Icons.settings),
-                          _carInfo("Seats", "6", Icons.event_seat),
-                          _carInfo("Speeds", "120", Icons.speed),
-                        ],
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _driverOption(
+                        "Without Driver",
+                        "assets/images/driver.png",
                       ),
+                      _driverOption("Driver Name", "assets/images/driver.png"),
+                      _driverOption("Driver Name", "assets/images/driver.png"),
+                      _driverOption("Driver Name", "assets/images/driver.png"),
+                      _driverOption("Driver Name", "assets/images/driver.png"),
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ===== Info Mobil =====
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _carInfo("Gear", "Matic", Icons.settings),
+                      _carInfo("Seats", "6", Icons.event_seat),
+                      _carInfo("Speeds", "120", Icons.speed),
+                    ],
+                  ),
+                ),
+              ],
             ),
+          ),
 
           // ===== Bottom Bar =====
           Positioned(
@@ -164,7 +161,12 @@ class DetailCarScreen extends StatelessWidget {
             right: 20,
             bottom: 12,
             child: Container(
-              padding: const EdgeInsets.only(right: 3, top: 3, bottom: 3, left: 15),
+              padding: const EdgeInsets.only(
+                right: 3,
+                top: 3,
+                bottom: 3,
+                left: 15,
+              ),
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(color: AppColors.abuGelap),
@@ -182,9 +184,12 @@ class DetailCarScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: handleBook,
+                    onTap: handleBookTransaction,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 15,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.blue,
                         borderRadius: BorderRadius.circular(50),
@@ -231,10 +236,7 @@ class DetailCarScreen extends StatelessWidget {
           Text(
             text,
             textAlign: TextAlign.center,
-            style: GoogleFonts.rubik(
-              color: AppColors.white,
-              fontSize: 12,
-            ),
+            style: GoogleFonts.rubik(color: AppColors.white, fontSize: 12),
           ),
         ],
       ),
@@ -257,7 +259,7 @@ class DetailCarScreen extends StatelessWidget {
             style: GoogleFonts.rubik(
               color: AppColors.white,
               fontSize: 13,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 5),

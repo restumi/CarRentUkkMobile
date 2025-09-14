@@ -1,33 +1,22 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
-import 'detail_car_screen.dart';
-import '../driver/driver_screen.dart';
-import '../profile/profile_screen.dart';
 import '../../widgets/bottom_navbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _goToDetail(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const DetailCarScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.detailCar);
   }
 
   void _goToDriver(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const DriverScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.driver);
   }
 
   void _goToProfile(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const ProfileScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.profile);
   }
 
   @override
