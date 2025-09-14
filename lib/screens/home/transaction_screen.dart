@@ -130,7 +130,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     ),
                                   ),
                                   const Icon(
-                                    Icons.calendar_today,
+                                    Icons.calendar_month_outlined,
                                     color: AppColors.white,
                                     size: 18,
                                   ),
@@ -176,7 +176,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     ),
                                   ),
                                   const Icon(
-                                    Icons.calendar_today,
+                                    Icons.calendar_month_outlined,
                                     color: AppColors.white,
                                     size: 18,
                                   ),

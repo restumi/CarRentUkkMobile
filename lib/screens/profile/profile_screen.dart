@@ -47,6 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _goTodriver(context);
                 }
               },
+              icons: [
+                Icons.home,
+                Icons.person_pin,
+                Icons.person
+              ],
             ),
           ],
         ),

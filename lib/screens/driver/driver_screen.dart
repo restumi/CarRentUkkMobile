@@ -48,6 +48,11 @@ class _DriverScreenState extends State<DriverScreen> {
                   _goToProfile(context);
                 }
               },
+              icons: [
+                Icons.home,
+                Icons.person_pin,
+                Icons.person
+              ],
             ),
           ],
         ),

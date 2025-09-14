@@ -214,32 +214,12 @@ class HomeScreen extends StatelessWidget {
                   _goToProfile(context);
                 }
               },
+              icons: [
+                Icons.home,
+                Icons.person_pin,
+                Icons.person
+              ],
             ),
-
-            // ===== Bottom Navbar =====
-            // Positioned(
-            //   bottom: 0,
-            //   left: MediaQuery.of(context).size.width * 0.125,
-            //   child: Container(
-            //     width: MediaQuery.of(context).size.width * 0.75,
-            //     padding: const EdgeInsets.symmetric(
-            //       vertical: 20,
-            //       horizontal: 30,
-            //     ),
-            //     decoration: const BoxDecoration(
-            //       color: Color(0xFF0064F9),
-            //       borderRadius: BorderRadius.all(Radius.circular(30)),
-            //     ),
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Image.asset("assets/icons/home.png", width: 28),
-            //         Image.asset("assets/icons/driver.png", width: 28),
-            //         Image.asset("assets/icons/profil.png", width: 28),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
