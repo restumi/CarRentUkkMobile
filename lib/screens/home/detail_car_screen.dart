@@ -4,12 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 
 class DetailCarScreen extends StatelessWidget {
-  const DetailCarScreen({super.key});
+  final dynamic dummyCars;
+  const DetailCarScreen({super.key, required this.dummyCars});
 
   @override
   Widget build(BuildContext context) {
     void handleBackToHome() {
-      Navigator.pushNamed(context, AppRouter.home, arguments: SlideDirection.left);
+      Navigator.pushNamed(
+        context,
+        AppRouter.home,
+        arguments: SlideDirection.left,
+      );
     }
 
     void handleBookTransaction() {
@@ -84,7 +89,7 @@ class DetailCarScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "Porsche Cammon",
+                                dummyCars.name,
                                 style: GoogleFonts.rubik(
                                   color: AppColors.white,
                                   fontSize: 40,
@@ -99,7 +104,7 @@ class DetailCarScreen extends StatelessWidget {
 
                         Center(
                           child: Image.asset(
-                            "assets/images/car.png",
+                            dummyCars.image,
                             width: 300,
                           ),
                         ),

@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import '../../widgets/bottom_navbar.dart';
+import 'package:car_rent_mobile_app/services/data/cars_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  void _goToDetail(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.detailCar);
+  void _goToDetail(BuildContext context, dynamic car) {
+    Navigator.pushNamed(
+        context, 
+        AppRouter.detailCar,
+        arguments: car
+    );
   }
 
   void _goToDriver(BuildContext context) {
@@ -101,10 +106,11 @@ class HomeScreen extends StatelessWidget {
                       right: 24,
                       top: 30,
                     ),
-                    itemCount: 6,
+                    itemCount: dummyCars.length,
                     itemBuilder: (context, index) {
+                      final car = dummyCars[index];
                       return GestureDetector(
-                        onTap: () => _goToDetail(context),
+                        onTap: () => _goToDetail(context, car),
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 40),
                           child: Stack(
@@ -132,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "Porsche Cammon",
+                                          car.name,
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14, // kecilin font
@@ -140,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "Manual",
+                                          car.type,
                                           style: GoogleFonts.rubik(
                                             color: Colors.white70,
                                             fontSize: 12, // kecilin font
@@ -154,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "Rp 1.000.000",
+                                          car.price,
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14,
@@ -176,13 +182,17 @@ class HomeScreen extends StatelessWidget {
 
                               // Mobil nongol di atas container
                               Positioned(
-                                top: -95,
+                                top: -30,
                                 left: 20,
                                 right: 20,
-                                child: Image.asset(
-                                  "assets/images/car.png",
-                                  height: 220,
-                                ),
+                                child: SizedBox(
+                                    height: 100,
+                                    width: 259,
+                                    child: Image.asset(
+                                        car.image ,
+                                        fit: BoxFit.scaleDown,
+                                    ),
+                                )
                               ),
                             ],
                           ),
@@ -214,11 +224,7 @@ class HomeScreen extends StatelessWidget {
                   _goToProfile(context);
                 }
               },
-              icons: [
-                Icons.home,
-                Icons.person_pin,
-                Icons.person
-              ],
+              icons: [Icons.home, Icons.person_pin, Icons.person],
             ),
           ],
         ),

@@ -43,7 +43,7 @@ class AppRouter {
         return _buildRoute(const ProfileScreen(), direction: direction);
 
       case detailCar:
-        return _buildRoute(const DetailCarScreen(), direction: direction);
+        return _buildRoute(DetailCarScreen(dummyCars: settings.arguments), direction: direction);
 
       case transaction:
         return _buildRoute(const TransactionScreen(), direction: direction);
