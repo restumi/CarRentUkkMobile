@@ -1,37 +1,16 @@
-import 'package:car_rent_mobile_app/routes/app_route.dart';
-import 'package:car_rent_mobile_app/widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:car_rent_mobile_app/routes/app_route.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  void _goToHome(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      AppRouter.home,
-      arguments: SlideDirection.left,
-    );
-  }
-
-  void _goTodriver(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      AppRouter.driver,
-      arguments: SlideDirection.left,
-    );
-  }
-
-  void _infoAccount(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.infoAccount);
-  }
-
+class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +51,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: AppColors.white,
-                    child: Icon(Icons.person, size: 60, color: AppColors.black),
+                    child: Icon(
+                      Icons.person,
+                      size: 60,
+                      color: AppColors.black,
+                    ),
                   ),
                   const SizedBox(height: 12),
 
@@ -92,17 +75,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       _buildMenuItem(
                         icon: Icons.vpn_key,
-                        title: "Info Account",
-                        onTap: () => _infoAccount(context),
+                        title: "cange username",
+                        onTap: () {},
                       ),
                       _buildMenuItem(
                         icon: Icons.history,
-                        title: "History Transaction",
+                        title: "cange password",
                         onTap: () {},
                       ),
                       _buildMenuItem(
                         icon: Icons.article,
-                        title: "Terms App",
+                        title: "logout",
                         onTap: () {},
                       ),
                     ],
@@ -110,24 +93,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-
-            CustomBottomNavbar(
-              currentIndex: 2,
-              onTap: (index) {
-                if (index == 0) {
-                  _goToHome(context);
-                } else if (index == 1) {
-                  _goTodriver(context);
-                }
-              },
-              icons: [Icons.home, Icons.person_pin, Icons.person],
-            ),
           ],
         ),
       ),
     );
   }
-
+  
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -138,7 +109,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
         decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.white24, width: 1)),
+          border: Border(
+            bottom: BorderSide(color: Colors.white24, width: 1),
+          ),
         ),
         child: Row(
           children: [
@@ -146,7 +119,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(width: 16),
             Text(
               title,
-              style: GoogleFonts.rubik(color: Colors.white, fontSize: 15),
+              style: GoogleFonts.rubik(
+                color: Colors.white,
+                fontSize: 15,
+              ),
             ),
           ],
         ),

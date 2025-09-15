@@ -5,6 +5,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/home/transaction_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/home/detail_car_screen.dart';
+import '../screens/profile/account_screen.dart';
 
 enum SlideDirection { left, right }
 
@@ -26,6 +27,7 @@ class AppRouter {
   static const String detailCar = '/detail-car';
   static const String transaction = '/transaction';
   static const String driver = '/driver';
+  static const String infoAccount = '/info-account';
 
   // === Generate Route ===
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -43,13 +45,19 @@ class AppRouter {
         return _buildRoute(const ProfileScreen(), direction: direction);
 
       case detailCar:
-        return _buildRoute(DetailCarScreen(dummyCars: settings.arguments), direction: direction);
+        return _buildRoute(
+          DetailCarScreen(dummyCars: settings.arguments),
+          direction: direction,
+        );
 
       case transaction:
         return _buildRoute(const TransactionScreen(), direction: direction);
 
       case driver:
         return _buildRoute(const DriverScreen(), direction: direction);
+
+      case infoAccount:
+        return _buildRoute(const AccountScreen(), direction: direction);
 
       default:
         return _buildRoute(_UnknownRoutePage(), direction: direction);
