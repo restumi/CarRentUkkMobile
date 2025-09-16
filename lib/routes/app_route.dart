@@ -64,7 +64,7 @@ class AppRouter {
     }
   }
 
-  // === Helper: Build Route with Slide Animation ===
+  // === Slide Animation ===
   static Route<dynamic> _buildRoute(
     Widget page, {
     SlideDirection direction = SlideDirection.right,

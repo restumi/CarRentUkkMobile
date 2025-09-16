@@ -71,16 +71,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ===== Back Button =====
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: AppColors.white,
-                      size: 20,
-                    ),
-                    onPressed: handleBack,
-                  ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 50),
 
                   // ===== Choose Date =====
                   Text(

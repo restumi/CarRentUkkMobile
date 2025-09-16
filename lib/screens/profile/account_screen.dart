@@ -1,7 +1,9 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -11,6 +13,112 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  File? _profileImage;
+
+  void _back(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      AppRouter.profile,
+      arguments: SlideDirection.left,
+    );
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showCangeUsername() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+            title: const Text("CangeUsername"),
+            content: TextField(
+                decoration: const InputDecoration(hintText: "Enter new username"),
+            ),
+            actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Save"),
+                )
+            ],
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Change Password"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              TextField(
+                decoration: InputDecoration(hintText: "Old password"),
+                obscureText: true,
+              ),
+              TextField(
+                decoration: InputDecoration(hintText: "New password"),
+                obscureText: true,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLogoutConfirmDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Logout"),
+          content: const Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // TODO: tambahin logic logout di sini
+              },
+              child: const Text("Logout"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,16 +142,28 @@ class _AccountScreenState extends State<AccountScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Profile Title
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Profile",
-                      style: GoogleFonts.rubik(
-                        color: AppColors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          size: 20,
+                          color: AppColors.white,
+                        ),
+                        onPressed: () => _back(context),
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Profile",
+                          style: GoogleFonts.rubik(
+                            color: AppColors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 30),
 
@@ -51,11 +171,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: AppColors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 60,
-                      color: AppColors.black,
-                    ),
+                    child: Icon(Icons.person, size: 60, color: AppColors.black),
                   ),
                   const SizedBox(height: 12),
 
@@ -76,17 +192,18 @@ class _AccountScreenState extends State<AccountScreen> {
                       _buildMenuItem(
                         icon: Icons.vpn_key,
                         title: "cange username",
-                        onTap: () {},
+                        onTap: _showCangeUsername,
                       ),
                       _buildMenuItem(
                         icon: Icons.history,
                         title: "cange password",
-                        onTap: () {},
+                        onTap: _showChangePasswordDialog,
                       ),
                       _buildMenuItem(
                         icon: Icons.article,
                         title: "logout",
-                        onTap: () {},
+                        onTap: _showLogoutConfirmDialog,
+                        color: AppColors.red,
                       ),
                     ],
                   ),
@@ -98,32 +215,25 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
     );
   }
-  
+
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    Color color = AppColors.white,
   }) {
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
         decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.white24, width: 1),
-          ),
+          border: Border(bottom: BorderSide(color: Colors.white24, width: 1)),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 22),
+            Icon(icon, color: color, size: 22),
             const SizedBox(width: 16),
-            Text(
-              title,
-              style: GoogleFonts.rubik(
-                color: Colors.white,
-                fontSize: 15,
-              ),
-            ),
+            Text(title, style: GoogleFonts.rubik(color: color, fontSize: 15)),
           ],
         ),
       ),
