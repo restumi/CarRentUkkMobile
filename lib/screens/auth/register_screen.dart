@@ -1,7 +1,6 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'login_screen.dart';
-import 'verify_screen.dart';
 import '../../styles/app_color.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -25,16 +24,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submitRegister() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacement(
+      Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) => VerificationScreen(
-            name: _nameController.text,
-            email: _emailController.text,
-            password: _passwordController.text,
-            passwordConfirmation: _confirmPasswordController.text,
-          ),
-        ),
+        AppRouter.verify,
+        arguments: {
+            "name": _nameController.text,
+            "email": _emailController.text,
+            "password": _passwordController.text,
+            "passwordConfirmation": _confirmPasswordController.text,
+        }
       );
     } else {
       setState(() {
@@ -44,9 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _handleLogin() {
-    Navigator.pushReplacement(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      AppRouter.login
     );
   }
 

@@ -1,6 +1,6 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
+      Navigator.pushNamed(context, AppRouter.home);
     } else {
       setState(() {
         _autoValidateMode = AutovalidateMode.always;
@@ -32,10 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleRegist() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const RegisterScreen()),
-    );
+    Navigator.pushNamed(context, AppRouter.regist);
   }
 
   InputDecoration _inputDecoration(

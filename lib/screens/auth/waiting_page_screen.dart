@@ -1,15 +1,15 @@
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
-import 'login_screen.dart';
 
 class WaitingScreen extends StatelessWidget {
   const WaitingScreen({super.key});
 
   void _goToLogin(BuildContext context) {
-    Navigator.pushReplacement(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      AppRouter.login
     );
   }
 

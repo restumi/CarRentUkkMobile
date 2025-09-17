@@ -2,8 +2,8 @@ import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:image_picker/image_picker.dart'; // NEW
+import 'dart:io'; // NEW
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -13,7 +13,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  File? _profileImage;
+  File? _profileImage; // NEW
 
   void _back(BuildContext context) {
     Navigator.pushNamed(
@@ -23,6 +23,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
+  // NEW - fungsi ambil gambar
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -33,12 +34,13 @@ class _AccountScreenState extends State<AccountScreen> {
     }
   }
 
-  void _showCangeUsername() {
+  // NEW - dialog ganti username
+  void _showChangeUsernameDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("CangeUsername"),
+          title: const Text("Change Username"),
           content: TextField(
             decoration: const InputDecoration(hintText: "Enter new username"),
           ),
@@ -48,7 +50,9 @@ class _AccountScreenState extends State<AccountScreen> {
               child: const Text("Cancel"),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text("Save"),
             ),
           ],
@@ -57,6 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
+  // NEW - dialog ganti password
   void _showChangePasswordDialog() {
     showDialog(
       context: context,
@@ -93,6 +98,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
+  // NEW - dialog konfirmasi logout
   void _showLogoutConfirmDialog() {
     showDialog(
       context: context,
@@ -108,7 +114,7 @@ class _AccountScreenState extends State<AccountScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, AppRouter.login);
+                // TODO: tambahin logic logout di sini
               },
               child: const Text("Logout"),
             ),
@@ -166,22 +172,17 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Avatar
+                  // Avatar + Camera Button (NEW)
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
                       CircleAvatar(
                         radius: 50,
                         backgroundColor: AppColors.white,
-                        backgroundImage: _profileImage != null
-                            ? FileImage(_profileImage!)
-                            : null,
+                        backgroundImage:
+                            _profileImage != null ? FileImage(_profileImage!) : null,
                         child: _profileImage == null
-                            ? Icon(
-                                Icons.person,
-                                color: AppColors.black,
-                                size: 60,
-                              )
+                            ? Icon(Icons.person, size: 60, color: AppColors.black)
                             : null,
                       ),
                       Positioned(
@@ -190,18 +191,15 @@ class _AccountScreenState extends State<AccountScreen> {
                         child: GestureDetector(
                           onTap: _pickImage,
                           child: const CircleAvatar(
-                            radius: 50,
-                            backgroundColor: AppColors.blue,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: AppColors.white,
-                              size: 18,
-                            ),
+                            radius: 18,
+                            backgroundColor: Colors.blue,
+                            child: Icon(Icons.camera_alt, color: Colors.white, size: 18),
                           ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 12),
 
                   // Username
@@ -220,18 +218,18 @@ class _AccountScreenState extends State<AccountScreen> {
                     children: [
                       _buildMenuItem(
                         icon: Icons.vpn_key,
-                        title: "cange username",
-                        onTap: _showCangeUsername,
+                        title: "Change Username",
+                        onTap: _showChangeUsernameDialog, // NEW
                       ),
                       _buildMenuItem(
                         icon: Icons.history,
-                        title: "cange password",
-                        onTap: _showChangePasswordDialog,
+                        title: "Change Password",
+                        onTap: _showChangePasswordDialog, // NEW
                       ),
                       _buildMenuItem(
                         icon: Icons.article,
-                        title: "logout",
-                        onTap: _showLogoutConfirmDialog,
+                        title: "Logout",
+                        onTap: _showLogoutConfirmDialog, // NEW
                         color: AppColors.red,
                       ),
                     ],
@@ -245,6 +243,7 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
+  // EDITED -> tambahin param color (default putih)
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -262,7 +261,10 @@ class _AccountScreenState extends State<AccountScreen> {
           children: [
             Icon(icon, color: color, size: 22),
             const SizedBox(width: 16),
-            Text(title, style: GoogleFonts.rubik(color: color, fontSize: 15)),
+            Text(
+              title,
+              style: GoogleFonts.rubik(color: color, fontSize: 15),
+            ),
           ],
         ),
       ),

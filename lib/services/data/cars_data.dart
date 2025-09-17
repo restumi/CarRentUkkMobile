@@ -14,12 +14,6 @@ final List<Car> dummyCars = [
     image: "assets/images/cars/car1.png",
   ),
   Car(
-    name: "Porsche Cammon",
-    type: "Manual",
-    price: "Rp 1.000.000",
-    image: "assets/images/cars/car2.png",
-  ),
-  Car(
     name: "Lamborghini Aventador",
     type: "Automatic",
     price: "Rp 5.000.000",
@@ -30,5 +24,17 @@ final List<Car> dummyCars = [
     type: "Automatic",
     price: "Rp 5.000.000",
     image: "assets/images/cars/car4.png",
+  ),
+    Car(
+    name: "Porsche Cammon",
+    type: "Manual",
+    price: "Rp 1.000.000",
+    image: "assets/images/cars/car.png",
+  ),
+  Car(
+    name: "Lamborghini Aventador",
+    type: "Automatic",
+    price: "Rp 5.000.000",
+    image: "assets/images/cars/car1.png",
   ),
 ];

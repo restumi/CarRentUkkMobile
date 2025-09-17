@@ -1,8 +1,8 @@
 import 'dart:io';
+import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'waiting_page_screen.dart';
 
 class VerificationScreen extends StatefulWidget {
   final String name;
@@ -64,11 +64,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
       // TODO: Panggil API create account + verify
       print(requestData);
 
-      Navigator.pushReplacement(
+      Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-            builder: (context) => const WaitingScreen(),
-        )
+        AppRouter.waiting
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

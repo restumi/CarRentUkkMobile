@@ -1,4 +1,8 @@
 // lib/routes/app_router.dart
+import 'package:car_rent_mobile_app/screens/auth/login_screen.dart';
+import 'package:car_rent_mobile_app/screens/auth/register_screen.dart';
+import 'package:car_rent_mobile_app/screens/auth/verify_screen.dart';
+import 'package:car_rent_mobile_app/screens/auth/waiting_page_screen.dart';
 import 'package:car_rent_mobile_app/screens/driver/driver_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/home/home_screen.dart';
@@ -28,6 +32,10 @@ class AppRouter {
   static const String transaction = '/transaction';
   static const String driver = '/driver';
   static const String infoAccount = '/info-account';
+  static const String login = '/login';
+  static const String regist = '/regist';
+  static const String verify = '/verify';
+  static const String waiting = '/waiting';
 
   // === Generate Route ===
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -58,6 +66,22 @@ class AppRouter {
 
       case infoAccount:
         return _buildRoute(const AccountScreen(), direction: direction);
+
+      case login:
+        return _buildRoute(const LoginScreen(), direction: direction);
+
+      case regist:
+        return _buildRoute(const RegisterScreen(), direction: direction);
+
+      case verify:
+        final args = settings.arguments as Map<String, dynamic>;
+        return _buildRoute(
+            VerificationScreen(name: args["name"], email: args["email"], password: args["password"], passwordConfirmation: args["passwordConfirmation"]), 
+            direction: direction
+        );
+
+      case waiting:
+        return _buildRoute(const WaitingScreen(), direction: direction);
 
       default:
         return _buildRoute(_UnknownRoutePage(), direction: direction);
