@@ -55,7 +55,7 @@ class DetailCarScreen extends StatelessWidget {
                   SafeArea(
                     child: Column(
                       crossAxisAlignment:
-                          CrossAxisAlignment.start, // tambah ini
+                          CrossAxisAlignment.start,
                       children: [
                         // ===== Back Button dan Car Details =====
                         Padding(
@@ -103,12 +103,25 @@ class DetailCarScreen extends StatelessWidget {
                         const SizedBox(height: 40),
 
                         Center(
-                          child: Image.asset(
-                            dummyCars.image,
-                            width: 300,
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                                Container(
+                                    width: 250,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                        color: Color.fromARGB(125, 0, 0, 0),
+                                        borderRadius: BorderRadius.circular(100)
+                                    ),
+                                ),
+                                Image.asset(
+                                    dummyCars.image,
+                                    width: 300,
+                                ),
+                            ],
                           ),
                         ),
-                        const Spacer(), // biar ada space
+                        const Spacer(),
                       ],
                     ),
                   ),

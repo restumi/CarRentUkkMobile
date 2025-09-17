@@ -190,7 +190,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         child: GestureDetector(
                           onTap: _pickImage,
                           child: const CircleAvatar(
-                            radius: 50,
+                            radius: 18,
                             backgroundColor: AppColors.blue,
                             child: Icon(
                               Icons.camera_alt,

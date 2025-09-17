@@ -21,10 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _temrs(BuildContext context) {
-    Navigator.pushNamed(
-        context,
-        AppRouter.terms
-    );
+    Navigator.pushNamed(context, AppRouter.terms);
   }
 
   void _goTodriver(BuildContext context) {
@@ -32,6 +29,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context,
       AppRouter.driver,
       arguments: SlideDirection.left,
+    );
+  }
+
+  void _goToTransaction(BuildContext context) {
+    Navigator.pushNamed(
+        context,
+        AppRouter.historyTransaction
     );
   }
 
@@ -105,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildMenuItem(
                         icon: Icons.history,
                         title: "History Transaction",
-                        onTap: () {},
+                        onTap: () => _goToTransaction(context),
                       ),
                       _buildMenuItem(
                         icon: Icons.article,

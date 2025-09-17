@@ -1,269 +1,201 @@
-import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
-import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart'; // NEW
-import 'dart:io'; // NEW
+import '../../styles/app_color.dart';
 
-class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+class HistoryTransactionScreen extends StatefulWidget {
+  const HistoryTransactionScreen({super.key});
 
   @override
-  State<AccountScreen> createState() => _AccountScreenState();
+  State<HistoryTransactionScreen> createState() => _TransactionScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
-  File? _profileImage; // NEW
+class _TransactionScreenState extends State<HistoryTransactionScreen> {
+  String selectedFilter = "Requested";
 
-  void _back(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      AppRouter.profile,
-      arguments: SlideDirection.left,
-    );
-  }
-
-  // NEW - fungsi ambil gambar
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
-  }
-
-  // NEW - dialog ganti username
-  void _showChangeUsernameDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Change Username"),
-          content: TextField(
-            decoration: const InputDecoration(hintText: "Enter new username"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // NEW - dialog ganti password
-  void _showChangePasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Change Password"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              TextField(
-                decoration: InputDecoration(hintText: "Old password"),
-                obscureText: true,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "New password"),
-                obscureText: true,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // NEW - dialog konfirmasi logout
-  void _showLogoutConfirmDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Logout"),
-          content: const Text("Are you sure you want to logout?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // TODO: tambahin logic logout di sini
-              },
-              child: const Text("Logout"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final List<Map<String, String>> transactions = [
+    {
+      "car": "Porsche Cammon",
+      "days": "3 days",
+      "plate": "H 1234 CP",
+      "status": "Requested",
+      "image": "assets/images/cars/car.png",
+    },
+    {
+      "car": "Porsche Cammon",
+      "days": "3 days",
+      "plate": "H 1234 CP",
+      "status": "Rejected",
+      "image": "assets/images/cars/car.png",
+    },
+    {
+      "car": "Porsche Cammon",
+      "days": "3 days",
+      "plate": "H 1234 CP",
+      "status": "Accepted",
+      "image": "assets/images/cars/car.png",
+    },
+    {
+      "car": "Porsche Cammon",
+      "days": "3 days",
+      "plate": "H 1234 CP",
+      "status": "Completed",
+      "image": "assets/images/cars/car.png",
+    },
+    {
+      "car": "Porsche Cammon",
+      "days": "3 days",
+      "plate": "H 1234 CP",
+      "status": "Completed",
+      "image": "assets/images/cars/car.png",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final filtered = transactions
+        .where((t) => t["status"] == selectedFilter)
+        .toList();
+
     return Scaffold(
       backgroundColor: AppColors.black,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Image.asset(
-                "assets/images/headerHome.png",
-                width: MediaQuery.of(context).size.width * 0.4,
-              ),
-            ),
-
-            // ===== Content =====
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Profile Title
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                          color: AppColors.white,
-                        ),
-                        onPressed: () => _back(context),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Profile",
-                          style: GoogleFonts.rubik(
-                            color: AppColors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Avatar + Camera Button (NEW)
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: AppColors.white,
-                        backgroundImage:
-                            _profileImage != null ? FileImage(_profileImage!) : null,
-                        child: _profileImage == null
-                            ? Icon(Icons.person, size: 60, color: AppColors.black)
-                            : null,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 4,
-                        child: GestureDetector(
-                          onTap: _pickImage,
-                          child: const CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.camera_alt, color: Colors.white, size: 18),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Username
-                  Text(
-                    "User",
-                    style: GoogleFonts.rubik(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Menu Items
-                  Column(
-                    children: [
-                      _buildMenuItem(
-                        icon: Icons.vpn_key,
-                        title: "Change Username",
-                        onTap: _showChangeUsernameDialog, // NEW
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.history,
-                        title: "Change Password",
-                        onTap: _showChangePasswordDialog, // NEW
-                      ),
-                      _buildMenuItem(
-                        icon: Icons.article,
-                        title: "Logout",
-                        onTap: _showLogoutConfirmDialog, // NEW
-                        color: AppColors.red,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: AppColors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: Text(
+          "Transaction",
+          style: GoogleFonts.rubik(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ===== Filter icons =====
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                _buildFilterIcon(Icons.send, "Requested"),
+                _buildFilterIcon(Icons.cancel, "Rejected"),
+                _buildFilterIcon(Icons.file_copy, "Accepted"),
+                _buildFilterIcon(Icons.event_available, "Completed"),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "All Transaction",
+              style: GoogleFonts.rubik(
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // ===== Transaction list =====
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: filtered.length,
+              itemBuilder: (context, index) {
+                final trx = filtered[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.abugelap2,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        trx["image"]!,
+                        width: 100,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              trx["car"]!,
+                              style: GoogleFonts.rubik(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              trx["days"]!,
+                              style: GoogleFonts.rubik(
+                                color: AppColors.abuTerang,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              trx["plate"]!,
+                              style: GoogleFonts.rubik(
+                                color: AppColors.abuTerang,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              trx["status"]!,
+                              style: GoogleFonts.rubik(
+                                color: AppColors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // EDITED -> tambahin param color (default putih)
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    Color color = AppColors.white,
-  }) {
-    return InkWell(
-      onTap: onTap,
+  Widget _buildFilterIcon(IconData icon, String label) {
+    final isActive = selectedFilter == label;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedFilter = label;
+        });
+      },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.white24, width: 1)),
+        margin: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.blue : AppColors.abugelap2,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Row(
+        child: Column(
           children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(width: 16),
+            Icon(icon, color: Colors.white, size: 28),
+            const SizedBox(height: 6),
             Text(
-              title,
-              style: GoogleFonts.rubik(color: color, fontSize: 15),
+              label,
+              style: GoogleFonts.rubik(
+                color: Colors.white,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
