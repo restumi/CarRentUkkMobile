@@ -20,6 +20,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _temrs(BuildContext context) {
+    Navigator.pushNamed(
+        context,
+        AppRouter.terms
+    );
+  }
+
   void _goTodriver(BuildContext context) {
     Navigator.pushNamed(
       context,
@@ -103,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildMenuItem(
                         icon: Icons.article,
                         title: "Terms App",
-                        onTap: () {},
+                        onTap: () => _temrs(context),
                       ),
                     ],
                   ),

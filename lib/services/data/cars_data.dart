@@ -26,7 +26,7 @@ final List<Car> dummyCars = [
     image: "assets/images/cars/car4.png",
   ),
     Car(
-    name: "Porsche Cammon",
+    name: "Porsche Cammon", 
     type: "Manual",
     price: "Rp 1.000.000",
     image: "assets/images/cars/car.png",
