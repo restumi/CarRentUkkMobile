@@ -1,4 +1,5 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/widgets/build_dialog.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,91 +32,6 @@ class _AccountScreenState extends State<AccountScreen> {
         _profileImage = File(pickedFile.path);
       });
     }
-  }
-
-  void _showCangeUsername() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("CangeUsername"),
-          content: TextField(
-            decoration: const InputDecoration(hintText: "Enter new username"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showChangePasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Change Password"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              TextField(
-                decoration: InputDecoration(hintText: "Old password"),
-                obscureText: true,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "New password"),
-                obscureText: true,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Save"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showLogoutConfirmDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Logout"),
-          content: const Text("Are you sure you want to logout?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, AppRouter.login);
-              },
-              child: const Text("Logout"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -221,17 +137,28 @@ class _AccountScreenState extends State<AccountScreen> {
                       _buildMenuItem(
                         icon: Icons.vpn_key,
                         title: "cange username",
-                        onTap: _showCangeUsername,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => const CangeUserName(),
+                        ),
                       ),
                       _buildMenuItem(
                         icon: Icons.history,
                         title: "cange password",
-                        onTap: _showChangePasswordDialog,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => const CangePassword(),
+                        ),
                       ),
                       _buildMenuItem(
                         icon: Icons.article,
                         title: "logout",
-                        onTap: _showLogoutConfirmDialog,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const LogoutDialog(),
+                          );
+                        },
                         color: AppColors.red,
                       ),
                     ],
