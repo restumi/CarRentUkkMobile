@@ -35,6 +35,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
     }
   }
 
+  void _rentNow(BuildContext context) {
+    Navigator.pushNamed(context, AppRouter.historyTransaction);
+  }
+
   void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusDay) {
     setState(() {
       _selectedDay = null;
@@ -45,7 +49,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   void handleBack() {
-    Navigator.pushNamed(context, AppRouter.detailCar, arguments: SlideDirection.left);
+    Navigator.pushNamed(
+      context,
+      AppRouter.detailCar,
+      arguments: SlideDirection.left,
+    );
   }
 
   @override
@@ -381,29 +389,35 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
                   // ===== Rent Now Button =====
                   Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.blue,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Rent Now",
-                            style: GoogleFonts.rubik(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                    child: GestureDetector(
+                      onTap: () => _rentNow(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Rent Now",
+                              style: GoogleFonts.rubik(
+                                color: AppColors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Image.asset("assets/icons/leftArrow.png", width: 22),
-                        ],
+                            const SizedBox(width: 8),
+                            Image.asset(
+                              "assets/icons/leftArrow.png",
+                              width: 22,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
