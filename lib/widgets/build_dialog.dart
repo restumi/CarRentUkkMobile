@@ -1,7 +1,9 @@
-import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_provider.dart';
+import 'auth_wrapper.dart';
 
 // ========== USERNAME DIALOG ===========
 class CangeUserName extends StatefulWidget {
@@ -311,8 +313,18 @@ class _LogoutDialogState extends State<LogoutDialog> {
                     foregroundColor: AppColors.red,
                     side: BorderSide(color: AppColors.red),
                   ),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, AppRouter.login),
+                  onPressed: () async {
+                    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                    await authProvider.logout();
+                    
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AuthWrapper()),
+                        (route) => false,
+                      );
+                    }
+                  },
                   child: Text("Logout"),
                 ),
               ],

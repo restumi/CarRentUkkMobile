@@ -6,6 +6,7 @@ import 'package:car_rent_mobile_app/screens/auth/waiting_page_screen.dart';
 import 'package:car_rent_mobile_app/screens/driver/driver_screen.dart';
 import 'package:car_rent_mobile_app/screens/profile/history_transaction_screen.dart';
 import 'package:car_rent_mobile_app/screens/terms_after_login.dart';
+import 'package:car_rent_mobile_app/screens/terms_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/transaction_screen.dart';
@@ -38,7 +39,8 @@ class AppRouter {
   static const String regist = '/regist';
   static const String verify = '/verify';
   static const String waiting = '/waiting';
-  static const String terms = '/terms-after-login';
+  static const String terms = '/terms';
+  static const String termsAfterLogin = '/terms-after-login';
   static const String historyTransaction = '/history-transaction';
 
   // === Generate Route ===
@@ -54,6 +56,9 @@ class AppRouter {
         return _buildRoute(const HistoryTransactionScreen(), direction: direction);
 
       case terms:
+        return _buildRoute(const TermsScreen(), direction: direction);
+
+      case termsAfterLogin:
         return _buildRoute(const TermsAfterLogin(), direction: direction);
 
       case home:

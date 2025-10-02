@@ -1,5 +1,6 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:car_rent_mobile_app/widgets/bottom_navbar.dart';
+import 'package:car_rent_mobile_app/widgets/build_dialog.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,6 +42,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _infoAccount(BuildContext context) {
     Navigator.pushNamed(context, AppRouter.infoAccount);
+  }
+
+  void _logout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const LogoutDialog(),
+    );
   }
 
   @override
@@ -116,6 +124,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         title: "Terms App",
                         onTap: () => _temrs(context),
                       ),
+                      _buildMenuItem(
+                        icon: Icons.logout,
+                        title: "Logout",
+                        onTap: () => _logout(context),
+                        isLogout: true,
+                      ),
                     ],
                   ),
                 ],
@@ -143,6 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    bool isLogout = false,
   }) {
     return InkWell(
       onTap: onTap,
@@ -153,11 +168,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 22),
+            Icon(
+              icon, 
+              color: isLogout ? AppColors.red : Colors.white, 
+              size: 22,
+            ),
             const SizedBox(width: 16),
             Text(
               title,
-              style: GoogleFonts.rubik(color: Colors.white, fontSize: 15),
+              style: GoogleFonts.rubik(
+                color: isLogout ? AppColors.red : Colors.white, 
+                fontSize: 15,
+              ),
             ),
           ],
         ),

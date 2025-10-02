@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-// import 'screens/terms_screen.dart';
-import 'screens/home/home_screen.dart';
+import 'package:provider/provider.dart';
 import 'widgets/status_bar_wrapper.dart';
+import 'widgets/auth_wrapper.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'routes/app_route.dart';
+import 'services/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id-ID');
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +33,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: HomeScreen(),
+        home: const AuthWrapper(),
         onGenerateRoute: AppRouter.generateRoute,
         localizationsDelegates: const[
             GlobalMaterialLocalizations.delegate,

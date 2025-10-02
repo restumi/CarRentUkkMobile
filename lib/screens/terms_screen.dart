@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'auth/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../styles/app_color.dart';
+import '../services/auth_provider.dart';
 
 class TermsScreen extends StatefulWidget {
   const TermsScreen({super.key});
@@ -14,13 +16,16 @@ class _TermsScreenState extends State<TermsScreen> {
   bool isChecked = false;
   bool showWarning = false;
 
-  void _handleAccept() {
+  void _handleAccept() async {
     if (!isChecked) {
       setState(() {
         showWarning = true;
       });
       return;
     }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.setTermsAccepted(true);
 
     Navigator.pushReplacement(
       context,

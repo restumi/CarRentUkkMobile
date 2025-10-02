@@ -2,6 +2,8 @@ import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../services/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,13 +20,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _obscurePassword = true;
 
-  void _submitLogin() {
+  void _submitLogin() async {
     if (_formKey.currentState!.validate()) {
-      // TODO: login logic
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
-      Navigator.pushNamed(context, AppRouter.home);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final success = await authProvider.login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      // Hide loading
+      if (mounted) Navigator.pop(context);
+
+      if (success) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
+          Navigator.pushReplacementNamed(context, AppRouter.home);
+        }
+      } else {
+        final msg = "devMode error: ${authProvider.lastError}";
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(msg),
+            ),
+          );
+        }
+      }
     } else {
       setState(() {
         _autoValidateMode = AutovalidateMode.always;
