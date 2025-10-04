@@ -11,7 +11,8 @@ class ApiService {
   ) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
-      body: {'email': email, 'password': password},
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
     if (response.statusCode == 200) {
@@ -25,7 +26,7 @@ class ApiService {
   static Future<List<dynamic>> getCars(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/cars'),
-      headers: {'Authorization': 'Beraer $token'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -38,7 +39,7 @@ class ApiService {
   static Future<Map<String, dynamic>> getCarDetail(int id, String token) async {
     final response = await http.get(
       Uri.parse("$baseUrl/cars/$id"),
-      headers: {'Authorization': 'Beraer $token'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -52,7 +53,7 @@ class ApiService {
   static Future<List<dynamic>> getDriver(String token) async {
     final response = await http.get(
       Uri.parse("$baseUrl/drivers"),
-      headers: {'Authorization': 'Beraer $token'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -66,7 +67,7 @@ class ApiService {
   static Future<List<dynamic>> getTransaction(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/transactions'),
-      headers: {'Authorization': 'Beraer $token'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -82,7 +83,8 @@ class ApiService {
   ) async {
     final response = await http.post(
       Uri.parse('$baseUrl/transactions'),
-      headers: {'Authorization': 'Beraer $token'},
+      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
+      body: jsonEncode(data),
     );
 
     if (response.statusCode == 200) {
