@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'auth_service.dart';
+import '../micro_services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _isLoggedIn = false;
@@ -43,7 +43,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       final response = await AuthService.login(email, password);
       _isLoggedIn = true;
-      _userData = response['user'];
+      _userData = response['data'];
       _lastError = null;
       _isLoading = false;
       notifyListeners();

@@ -1,7 +1,7 @@
 import '../models/driver_model.dart';
 
 final List<Driver> dummyDriver = [
-  Driver(
+  Driver( 
     name: "Mr. Jhon",
     age: "21 th",
     gender: "male",

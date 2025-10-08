@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'auth/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../styles/app_color.dart';
-import '../services/auth_provider.dart';
+import '../services/provider/auth_provider.dart';
 
 class TermsScreen extends StatefulWidget {
   const TermsScreen({super.key});

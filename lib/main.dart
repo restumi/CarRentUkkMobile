@@ -5,7 +5,7 @@ import 'widgets/auth_wrapper.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'routes/app_route.dart';
-import 'services/auth_provider.dart';
+import 'services/provider/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

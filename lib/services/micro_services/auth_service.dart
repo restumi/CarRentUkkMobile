@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'api_service.dart';
+import '../api_service.dart';
 
 class AuthService {
   static const String _tokenKey = 'auth_token';
@@ -12,10 +12,10 @@ class AuthService {
     try {
       final response = await ApiService.login(email, password);
       
-      if (response['status'] == 'success' && response['token'] != null) {
+      if (response['success'] == true && response['token'] != null) {
         // Save user token
         await _saveToken(response['token']);
-        await _saveUserData(response['user']);
+        await _saveUserData(response['data']);
         return response;
       } else {
         throw Exception('Login gagal: ${response['message'] ?? 'Unknown error'}');

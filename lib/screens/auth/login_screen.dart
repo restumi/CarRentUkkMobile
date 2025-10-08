@@ -3,7 +3,7 @@ import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import '../../services/auth_provider.dart';
+import '../../services/provider/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
