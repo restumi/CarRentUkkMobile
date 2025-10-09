@@ -156,6 +156,11 @@ class _DriverScreenState extends State<DriverScreen> {
                 Icons.person_pin,
                 Icons.person
               ],
+              labels: [
+                "Home",
+                "Drivers",
+                "Profile"
+              ],
             ),
           ],
         ),

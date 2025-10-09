@@ -28,7 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+          ),
+        ),
       );
 
       final success = await authProvider.login(

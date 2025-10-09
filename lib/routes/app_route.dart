@@ -12,7 +12,6 @@ import '../screens/home/home_screen.dart';
 import '../screens/home/transaction_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/home/detail_car_screen.dart';
-import '../screens/profile/account_screen.dart';
 
 enum SlideDirection { left, right }
 
@@ -78,9 +77,6 @@ class AppRouter {
 
       case driver:
         return _buildRoute(const DriverScreen(), direction: direction);
-
-      case infoAccount:
-        return _buildRoute(const AccountScreen(), direction: direction);
 
       case login:
         return _buildRoute(const LoginScreen(), direction: direction);

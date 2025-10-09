@@ -40,10 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _infoAccount(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.infoAccount);
-  }
-
   void _logout(BuildContext context) {
     showDialog(
       context: context,
@@ -110,11 +106,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     children: [
                       _buildMenuItem(
-                        icon: Icons.vpn_key,
-                        title: "Info Account",
-                        onTap: () => _infoAccount(context),
-                      ),
-                      _buildMenuItem(
                         icon: Icons.history,
                         title: "History Transaction",
                         onTap: () => _goToTransaction(context),
@@ -146,6 +137,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               icons: [Icons.home, Icons.person_pin, Icons.person],
+              labels: [
+                "Home",
+                "Drivers",
+                "Profile"
+              ],
             ),
           ],
         ),

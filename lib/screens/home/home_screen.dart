@@ -225,6 +225,11 @@ class HomeScreen extends StatelessWidget {
                 }
               },
               icons: [Icons.home, Icons.person_pin, Icons.person],
+              labels: [
+                "Home",
+                "Drivers",
+                "Profile"
+              ],
             ),
           ],
         ),
