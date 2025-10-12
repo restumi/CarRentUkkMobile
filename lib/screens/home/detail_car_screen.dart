@@ -165,7 +165,7 @@ class DetailCarScreen extends StatelessWidget {
                     children: [
                       _carInfo("Gear", "Matic", Icons.settings),
                       _carInfo("Seats", "6", Icons.event_seat),
-                      _carInfo("Speeds", "120", Icons.speed),
+                      _carInfo("Brand", "Toyota", Icons.check_circle),
                     ],
                   ),
                 ),

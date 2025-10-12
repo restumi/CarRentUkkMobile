@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _temrs(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.terms);
+    Navigator.pushNamed(context, AppRouter.termsAfterLogin);
   }
 
   void _goTodriver(BuildContext context) {
