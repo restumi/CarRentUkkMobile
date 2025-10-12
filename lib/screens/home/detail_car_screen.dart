@@ -25,108 +25,112 @@ class DetailCarScreen extends StatelessWidget {
       backgroundColor: AppColors.black,
       body: Stack(
         children: [
-          // ===== Background abu gelap (hanya sampai bawah mobil) =====
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              decoration: const BoxDecoration(
-                color: AppColors.abugelap2,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  // ===== Header Image =====
-                  Positioned(
-                    top: 30,
-                    right: 0,
-                    child: Image.asset(
-                      "assets/images/headerHome.png",
-                      width: MediaQuery.of(context).size.width * 0.4,
+            child: LayoutBuilder(
+              builder: (context, constrainets) {
+                return IntrinsicHeight(
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 350),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.abuGelap,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
                     ),
-                  ),
-
-                  // ===== Konten di dalam SafeArea =====
-                  SafeArea(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                    child: Stack(
                       children: [
-                        // ===== Back Button dan Car Details =====
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_ios,
-                              color: AppColors.white,
-                              size: 20,
-                            ),
-                            onPressed: handleBackToHome,
+                        // ===== Header Image =====
+                        Positioned(
+                          top: 30,
+                          right: 0,
+                          child: Image.asset(
+                            "assets/images/headerHome.png",
+                            width: MediaQuery.of(context).size.width * 0.4,
                           ),
                         ),
-                        const SizedBox(height: 20),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
+                        // ===== Konten di dalam SafeArea =====
+                        SafeArea(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 8),
-                              Text(
-                                "Car Details",
-                                style: GoogleFonts.rubik(
-                                  color: AppColors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                              // ===== Back Button dan Car Details =====
+                              Padding(
+                                padding: const EdgeInsets.only(left: 25),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios,
+                                    color: AppColors.white,
+                                    size: 20,
+                                  ),
+                                  onPressed: handleBackToHome,
                                 ),
                               ),
-                              Text(
-                                dummyCars.name,
-                                style: GoogleFonts.rubik(
-                                  color: AppColors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
+                              const SizedBox(height: 20),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 40),
-
-                        Center(
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                                Container(
-                                    width: 250,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                        color: Color.fromARGB(125, 0, 0, 0),
-                                        borderRadius: BorderRadius.circular(100)
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Car Details",
+                                      style: GoogleFonts.rubik(
+                                        color: AppColors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+                                    Text(
+                                      dummyCars.name,
+                                      style: GoogleFonts.rubik(
+                                        color: AppColors.white,
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Image.asset(
-                                    dummyCars.image,
-                                    width: 300,
+                              ),
+
+                              const SizedBox(height: 40),
+
+                              Center(
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      width: 250,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(125, 0, 0, 0),
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
+                                      ),
+                                    ),
+                                    Image.asset(dummyCars.image, width: 300),
+                                  ],
                                 ),
+                              ),
+                              const Spacer(),
                             ],
                           ),
                         ),
-                        const Spacer(),
                       ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
 
