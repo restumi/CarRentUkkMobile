@@ -29,10 +29,12 @@ class _TermsScreenState extends State<TermsScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.setTermsAccepted(true);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
   }
 
   @override

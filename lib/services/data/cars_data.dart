@@ -14,13 +14,13 @@ final List<Car> dummyCars = [
     image: "assets/images/cars/car1.png",
   ),
   Car(
-    name: "Lamborghini Aventador",
+    name: "Lamborghini Kontolodor",
     type: "Automatic",
     price: "Rp 5.000.000",
     image: "assets/images/cars/car3.png",
   ),
   Car(
-    name: "Lamborghini Aventador",
+    name: "Mobil Gede",
     type: "Automatic",
     price: "Rp 5.000.000",
     image: "assets/images/cars/car4.png",

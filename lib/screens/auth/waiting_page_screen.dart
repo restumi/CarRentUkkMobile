@@ -1,16 +1,38 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 
-class WaitingScreen extends StatelessWidget {
+class WaitingScreen extends StatefulWidget {
   const WaitingScreen({super.key});
 
+  @override
+  State<WaitingScreen> createState() => _WaitingScreenState();
+}
+
+class _WaitingScreenState extends State<WaitingScreen> {
+  String? _status;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStatus();
+  }
+
+  Future<void> _loadStatus() async {
+    final status = await AuthService.getStatus();
+    if (mounted) {
+      setState(() {
+        _status = status ?? 'pending';
+        _loading = false;
+      });
+    }
+  }
+
   void _goToLogin(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      AppRouter.login
-    );
+    Navigator.pushNamed(context, AppRouter.login);
   }
 
   @override
@@ -26,7 +48,7 @@ class WaitingScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                    SizedBox(height: 60,),
+                  SizedBox(height: 60),
                   // ===== CARD CONTAINER =====
                   Container(
                     padding: const EdgeInsets.all(24),
@@ -56,7 +78,7 @@ class WaitingScreen extends StatelessWidget {
 
                         // Text status
                         Text(
-                          "status registrasi : pending",
+                          "status registrasi : ${_loading ? 'memuat' : _status ?? 'pending'}",
                           style: GoogleFonts.rubik(
                             fontSize: 16,
                             color: AppColors.abuGelap,

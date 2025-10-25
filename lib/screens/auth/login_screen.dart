@@ -1,4 +1,5 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,8 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _handleRegist() {
-    Navigator.pushNamed(context, AppRouter.regist);
+  void _handleRegist() async {
+    final isInVerification = await AuthService.isUserVerifications();
+
+    if(isInVerification){
+      if(mounted){
+        Navigator.pushNamed(context, AppRouter.waiting);
+    }
+    } else {
+      if(mounted){
+        Navigator.pushNamed(context, AppRouter.regist);
+      }
+    }
   }
 
   InputDecoration _inputDecoration(

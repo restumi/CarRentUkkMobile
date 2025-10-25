@@ -6,19 +6,26 @@ class AuthService {
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'user_data';
   static const String _termsAcceptedKey = 'terms_accepted';
+  static const String _verificationsStatusKey = 'verification_status';
+  static const String _verificatiionsEmailKey = 'verification_email';
 
   // ====================== LOGIN ======================
-  static Future<Map<String, dynamic>> login(String email, String password) async {
+  static Future<Map<String, dynamic>> login(
+    String email,
+    String password,
+  ) async {
     try {
       final response = await ApiService.login(email, password);
-      
+
       if (response['success'] == true && response['token'] != null) {
         // Save user token
         await _saveToken(response['token']);
         await _saveUserData(response['data']);
         return response;
       } else {
-        throw Exception('Login gagal: ${response['message'] ?? 'Unknown error'}');
+        throw Exception(
+          'Login gagal: ${response['message'] ?? 'Unknown error'}',
+        );
       }
     } catch (e) {
       throw Exception('Login gagal: $e');
@@ -89,5 +96,33 @@ class AuthService {
       await logout();
       return false;
     }
+  }
+
+  // ====================== REGIST RESULT ======================
+  static Future<void> saveVerifyData({
+    required String email,
+    required String status,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_verificationsStatusKey, status);
+    await prefs.setString(_verificatiionsEmailKey, email);
+  }
+
+  // ====================== GET STATUS ======================
+  static Future<String?> getStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_verificationsStatusKey);
+  }
+
+  // ====================== GET EMAIL ======================
+  static Future<String?> getEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_verificatiionsEmailKey);
+  }
+
+  // ====================== CHECK STATUS ======================
+  static Future<bool> isUserVerifications() async {
+    final status = await getStatus();
+    return status != null && status != 'rejected';
   }
 }

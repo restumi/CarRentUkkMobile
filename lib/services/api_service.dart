@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -19,6 +20,54 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('failed to Login: ${response.body}');
+    }
+  }
+
+  // ====================== REGIST ======================
+  static Future<Map<String, dynamic>> regist({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+    required String phoneNumber,
+    required String address,
+    required String nik,
+    required File ktpImage,
+    required File faceImage,
+  }) async {
+    final uri = Uri.parse('$baseUrl/register');
+    final request = http.MultipartRequest('POST', uri);
+
+    request.fields['name'] = name;
+    request.fields['email'] = email;
+    request.fields['password'] = password;
+    request.fields['password_confirmation'] = passwordConfirmation;
+    request.fields['nik'] = nik;
+    request.fields['phone_number'] = phoneNumber;
+    request.fields['address'] = address;
+    request.files.add(
+      await http.MultipartFile.fromPath('ktp_image', ktpImage.path),
+    );
+    request.files.add(
+      await http.MultipartFile.fromPath('face_image', faceImage.path),
+    );
+
+    final response = await request.send();
+    final responseStr = await response.stream.bytesToString();
+
+    if (response.statusCode == 201) {
+      return jsonDecode(responseStr);
+    } else {
+      try {
+        final errorJson = jsonDecode(responseStr);
+        throw Exception(
+          'register gagal: ${errorJson['message'] ?? responseStr}',
+        );
+      } catch (e) {
+        throw Exception(
+          'register gagal: (${response.statusCode}): $responseStr',
+        );
+      }
     }
   }
 
@@ -83,7 +132,10 @@ class ApiService {
   ) async {
     final response = await http.post(
       Uri.parse('$baseUrl/transactions'),
-      headers: {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
       body: jsonEncode(data),
     );
 

@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,28 +48,51 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
-  void _submitVerification() {
+  void _submitVerification() async {
     if (_formKey.currentState!.validate() &&
         _ktpImage != null &&
         _faceImage != null) {
-      final requestData = {
-        "name": widget.name,
-        "email": widget.email,
-        "password": widget.password,
-        "nik": _nikController.text,
-        "phone": _phoneController.text,
-        "address": _addressController.text,
-        "ktp_image": _ktpImage!.path,
-        "face_image": _faceImage!.path,
-      };
-
-      // TODO: Panggil API create account + verify
-      print(requestData);
-
-      Navigator.pushNamed(
-        context,
-        AppRouter.waiting
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
+
+      try {
+        final response = await ApiService.regist(
+          name: widget.name,
+          email: widget.email,
+          password: widget.password,
+          passwordConfirmation: widget.passwordConfirmation,
+          phoneNumber: _phoneController.text.trim(),
+          address: _addressController.text.trim(),
+          nik: _nikController.text.trim(),
+          ktpImage: _ktpImage!,
+          faceImage: _faceImage!,
+        );
+
+        await AuthService.saveVerifyData(
+          email: widget.email,
+          status: response['data']['status'],
+        );
+
+        if (mounted) Navigator.pop(context);
+
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(response['message'])));
+          Navigator.pushNamed(context, AppRouter.waiting);
+        }
+      } catch (e) {
+        if (mounted) Navigator.pop(context);
+
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        }
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lengkapi semua data & upload gambar!")),

@@ -36,7 +36,7 @@ class DetailCarScreen extends StatelessWidget {
                     constraints: const BoxConstraints(minHeight: 350),
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AppColors.abuGelap,
+                      color: AppColors.abugelap2,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
@@ -106,19 +106,16 @@ class DetailCarScreen extends StatelessWidget {
 
                               Center(
                                 child: Stack(
-                                  alignment: Alignment.bottomCenter,
+                                  alignment: Alignment.center,
                                   children: [
-                                    Container(
-                                      width: 250,
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(125, 0, 0, 0),
-                                        borderRadius: BorderRadius.circular(
-                                          100,
-                                        ),
+                                    ClipOval(
+                                      child: Container(
+                                        width: 250,
+                                        height: 180,
+                                        color: const Color.fromARGB(255, 0, 100, 249),
                                       ),
                                     ),
-                                    Image.asset(dummyCars.image, width: 300),
+                                    Image.asset(dummyCars.image, width: 300, fit: BoxFit.contain,),
                                   ],
                                 ),
                               ),
@@ -244,7 +241,7 @@ class DetailCarScreen extends StatelessWidget {
   // ===== Driver Card =====
   Widget _driverOption(String text, String iconPath) {
     return Container(
-      width: 115,
+      width: 120,
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: AppColors.abugelap2,
