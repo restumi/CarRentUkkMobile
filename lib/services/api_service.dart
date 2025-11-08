@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = "http://192.168.100.15:8000/api";
+  static const String baseUrl = "http://10.0.2.2:8000/api";
 
   // ====================== AUTH ======================
   static Future<Map<String, dynamic>> login(
@@ -79,7 +79,8 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      return List<dynamic>.from(jsonResponse['data']);
     } else {
       throw Exception("failed to get cars: ${response.body}");
     }
@@ -106,7 +107,8 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      return List<dynamic>.from(jsonResponse['data']);
     } else {
       throw Exception('failed to get drivers: ${response.body}');
     }
@@ -120,7 +122,9 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      return List<dynamic>.from(jsonResponse['data']);
+      // return jsonDecode(response.body);
     } else {
       throw Exception('failed to get transaction: ${response.body}');
     }

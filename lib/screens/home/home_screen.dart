@@ -1,19 +1,16 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+// import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import '../../widgets/bottom_navbar.dart';
-import 'package:car_rent_mobile_app/services/data/cars_data.dart';
+import 'package:car_rent_mobile_app/services/data/cars_dummy_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _goToDetail(BuildContext context, dynamic car) {
-    Navigator.pushNamed(
-        context, 
-        AppRouter.detailCar,
-        arguments: car
-    );
+    Navigator.pushNamed(context, AppRouter.detailCar, arguments: car);
   }
 
   void _goToDriver(BuildContext context) {
@@ -186,13 +183,13 @@ class HomeScreen extends StatelessWidget {
                                 left: 20,
                                 right: 20,
                                 child: SizedBox(
-                                    height: 100,
-                                    width: 259,
-                                    child: Image.asset(
-                                        car.image ,
-                                        fit: BoxFit.scaleDown,
-                                    ),
-                                )
+                                  height: 100,
+                                  width: 259,
+                                  child: Image.asset(
+                                    car.image,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -225,11 +222,7 @@ class HomeScreen extends StatelessWidget {
                 }
               },
               icons: [Icons.home, Icons.person_pin, Icons.person],
-              labels: [
-                "Home",
-                "Drivers",
-                "Profile"
-              ],
+              labels: ["Home", "Drivers", "Profile"],
             ),
           ],
         ),

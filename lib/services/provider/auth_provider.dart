@@ -16,15 +16,25 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _isLoggedIn = await AuthService.isLoggedIn();
-      if (_isLoggedIn) {
+      final isLoggedIn = await AuthService.isLoggedIn();
+      print('[authProvider] isLoggedIn : $isLoggedIn');
+
+      if (isLoggedIn) {
         _userData = await AuthService.getUserData();
-        _isLoggedIn = await AuthService.verifyToken();
+        print('[authProvider] user data : $_userData');
+
+        final isTokenValid = await AuthService.verifyToken();
+        print('[authProvider] token valid : $isTokenValid');
+
+        _isLoggedIn = isTokenValid;
         if (!_isLoggedIn) {
           _userData = null;
         }
+      } else {
+        _isLoggedIn = false;
       }
     } catch (e) {
+      print('[authProvider] error di initialize : $e');
       _isLoggedIn = false;
       _userData = null;
     }

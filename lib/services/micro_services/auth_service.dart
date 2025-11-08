@@ -17,10 +17,18 @@ class AuthService {
     try {
       final response = await ApiService.login(email, password);
 
-      if (response['success'] == true && response['token'] != null) {
+      final isSuccess =
+          response['success'] == true || response['success'] == 'true';
+      final hasToken = response['token'] != null && response['token'] is String;
+
+      if (isSuccess && hasToken) {
+        final token = response['token'] as String;
+        final userData = response['data'] ?? {};
+
         // Save user token
-        await _saveToken(response['token']);
-        await _saveUserData(response['data']);
+        await _saveToken(token);
+        await _saveUserData(userData);
+
         return response;
       } else {
         throw Exception(
@@ -88,11 +96,15 @@ class AuthService {
   static Future<bool> verifyToken() async {
     try {
       final token = await getToken();
+      print('[verifyToken] token : $token');
       if (token == null) return false;
 
+      print('[verifyToken] mencoba access cars api . . .');
       await ApiService.getCars(token);
+      print('[verifyToken] token valid');
       return true;
     } catch (e) {
+      print('[verifyToken] gagal verifikasi token : $e');
       await logout();
       return false;
     }
