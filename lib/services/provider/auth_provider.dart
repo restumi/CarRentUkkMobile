@@ -17,14 +17,11 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       final isLoggedIn = await AuthService.isLoggedIn();
-      print('[authProvider] isLoggedIn : $isLoggedIn');
 
       if (isLoggedIn) {
         _userData = await AuthService.getUserData();
-        print('[authProvider] user data : $_userData');
 
         final isTokenValid = await AuthService.verifyToken();
-        print('[authProvider] token valid : $isTokenValid');
 
         _isLoggedIn = isTokenValid;
         if (!_isLoggedIn) {
@@ -34,7 +31,6 @@ class AuthProvider extends ChangeNotifier {
         _isLoggedIn = false;
       }
     } catch (e) {
-      print('[authProvider] error di initialize : $e');
       _isLoggedIn = false;
       _userData = null;
     }

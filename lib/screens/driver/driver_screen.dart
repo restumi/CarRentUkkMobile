@@ -1,4 +1,5 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,8 +13,32 @@ class DriverScreen extends StatefulWidget {
 }
 
 class _DriverScreenState extends State<DriverScreen> {
+  String? _username = 'user';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final userData = await AuthService.getUserData();
+
+    if (userData != null && userData.containsKey('name')) {
+      if (mounted) {
+        setState(() {
+          _username = userData['name'];
+        });
+      }
+    }
+  }
+
   void _goToHome(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.home, arguments: SlideDirection.left);
+    Navigator.pushNamed(
+      context,
+      AppRouter.home,
+      arguments: SlideDirection.left,
+    );
   }
 
   void _goToProfile(BuildContext context) {
@@ -23,7 +48,12 @@ class _DriverScreenState extends State<DriverScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> drivers = [
-      {"name": "Mr. Aldrick", "age": "25 th", "gender": "Male", "job": "Student"},
+      {
+        "name": "Mr. Aldrick",
+        "age": "25 th",
+        "gender": "Male",
+        "job": "Student",
+      },
       {"name": "Mr. John", "age": "25 th", "gender": "Male", "job": "Student"},
       {"name": "Mr. David", "age": "25 th", "gender": "Male", "job": "Student"},
       {"name": "Mr. Kevin", "age": "25 th", "gender": "Male", "job": "Student"},
@@ -50,7 +80,7 @@ class _DriverScreenState extends State<DriverScreen> {
                 children: [
                   // Header
                   Text(
-                    "Hi, User",
+                    "Hi, $_username",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
                       fontSize: 20,
@@ -151,16 +181,8 @@ class _DriverScreenState extends State<DriverScreen> {
                   _goToProfile(context);
                 }
               },
-              icons: [
-                Icons.home,
-                Icons.person_pin,
-                Icons.person
-              ],
-              labels: [
-                "Home",
-                "Drivers",
-                "Profile"
-              ],
+              icons: [Icons.home, Icons.person_pin, Icons.person],
+              labels: ["Home", "Drivers", "Profile"],
             ),
           ],
         ),

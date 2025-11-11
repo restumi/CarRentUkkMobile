@@ -13,7 +13,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AuthProvider(),
+      create: (context) => AuthProvider()..initialize(),
       child: const MyApp(),
     ),
   );

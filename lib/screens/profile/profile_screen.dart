@@ -1,4 +1,6 @@
+import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:car_rent_mobile_app/widgets/bottom_navbar.dart';
 import 'package:car_rent_mobile_app/widgets/build_dialog.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? _username = 'user';
+  String? _faceImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final userData = await AuthService.getUserData();
+
+    if (userData != null && userData.containsKey('name')) {
+      if (mounted) {
+        setState(() {
+          _username = userData['name'];
+          _faceImage = userData['face_image'];
+        });
+      }
+    }
+  }
+
   void _goToHome(BuildContext context) {
     Navigator.pushNamed(
       context,
@@ -34,17 +58,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _goToTransaction(BuildContext context) {
-    Navigator.pushNamed(
-        context,
-        AppRouter.historyTransaction
-    );
+    Navigator.pushNamed(context, AppRouter.historyTransaction);
   }
 
   void _logout(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => const LogoutDialog(),
-    );
+    showDialog(context: context, builder: (context) => const LogoutDialog());
   }
 
   @override
@@ -87,13 +105,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: AppColors.white,
-                    child: Icon(Icons.person, size: 60, color: AppColors.black),
+                    backgroundImage: _faceImage != null
+                        ? NetworkImage('${AppConfig.storageUrl}/$_faceImage')
+                        : null,
+                    child: _faceImage == null
+                        ? Icon(Icons.person, size: 60, color: AppColors.black)
+                        : null,
                   ),
                   const SizedBox(height: 12),
 
                   // Username
                   Text(
-                    "User",
+                    "$_username",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
                       fontSize: 16,
@@ -137,11 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               icons: [Icons.home, Icons.person_pin, Icons.person],
-              labels: [
-                "Home",
-                "Drivers",
-                "Profile"
-              ],
+              labels: ["Home", "Drivers", "Profile"],
             ),
           ],
         ),
@@ -165,15 +184,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Row(
           children: [
             Icon(
-              icon, 
-              color: isLogout ? AppColors.red : Colors.white, 
+              icon,
+              color: isLogout ? AppColors.red : Colors.white,
               size: 22,
             ),
             const SizedBox(width: 16),
             Text(
               title,
               style: GoogleFonts.rubik(
-                color: isLogout ? AppColors.red : Colors.white, 
+                color: isLogout ? AppColors.red : Colors.white,
                 fontSize: 15,
               ),
             ),

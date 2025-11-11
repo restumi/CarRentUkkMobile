@@ -96,15 +96,11 @@ class AuthService {
   static Future<bool> verifyToken() async {
     try {
       final token = await getToken();
-      print('[verifyToken] token : $token');
       if (token == null) return false;
 
-      print('[verifyToken] mencoba access cars api . . .');
       await ApiService.getCars(token);
-      print('[verifyToken] token valid');
       return true;
     } catch (e) {
-      print('[verifyToken] gagal verifikasi token : $e');
       await logout();
       return false;
     }

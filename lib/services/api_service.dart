@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 
 class ApiService {
-  static const String baseUrl = "http://10.0.2.2:8000/api";
+  static const String baseUrl = AppConfig.apiUrl;
 
   // ====================== AUTH ======================
   static Future<Map<String, dynamic>> login(

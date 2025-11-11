@@ -25,31 +25,30 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) =>
+              const Center(child: CircularProgressIndicator()),
+        );
+      }
+
       final success = await authProvider.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      // Hide loading
       if (mounted) Navigator.pop(context);
 
-      if (success) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Login berhasil!")));
+      if (success && mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacementNamed(context, AppRouter.home);
-        }
-      } else {
-        final msg = "devMode error: ${authProvider.lastError}";
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(msg),
-            ),
-          );
-        }
+        });
+      } else if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan.')));
       }
     } else {
       setState(() {
@@ -61,12 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleRegist() async {
     final isInVerification = await AuthService.isUserVerifications();
 
-    if(isInVerification){
-      if(mounted){
+    if (isInVerification) {
+      if (mounted) {
         Navigator.pushNamed(context, AppRouter.waiting);
-    }
+      }
     } else {
-      if(mounted){
+      if (mounted) {
         Navigator.pushNamed(context, AppRouter.regist);
       }
     }

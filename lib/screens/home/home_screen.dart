@@ -1,4 +1,5 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 // import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,8 +7,33 @@ import '../../styles/app_color.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'package:car_rent_mobile_app/services/data/cars_dummy_data.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? _username = 'user';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final userData = await AuthService.getUserData();
+
+    if (userData != null && userData.containsKey('name')) {
+      if (mounted) {
+        setState(() {
+          _username = userData['name'];
+        });
+      }
+    }
+  }
 
   void _goToDetail(BuildContext context, dynamic car) {
     Navigator.pushNamed(context, AppRouter.detailCar, arguments: car);
@@ -35,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 40),
                   child: Text(
-                    "Hi, User",
+                    "Hi, ${_username ?? 'User'}",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
                       fontSize: 20,
