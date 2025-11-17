@@ -1,4 +1,5 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
 import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,12 +23,61 @@ class _WaitingScreenState extends State<WaitingScreen> {
   }
 
   Future<void> _loadStatus() async {
-    final status = await AuthService.getStatus();
-    if (mounted) {
-      setState(() {
-        _status = status ?? 'pending';
-        _loading = false;
-      });
+    final email = await AuthService.getEmail();
+
+    if (email == null) {
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRouter.regist,
+          (r) => false,
+        );
+      }
+      return;
+    }
+
+    try {
+      final response = await ApiService.getStatus(email);
+
+      if (response['success'] == true) {
+        final newStatus = response['data'];
+
+        await AuthService.saveVerifyData(email: email, status: newStatus);
+
+        if (mounted) {
+          setState(() {
+            _status = newStatus;
+            _loading = false;
+          });
+        }
+
+        if (newStatus == 'approved') {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Silahkan login menggunakan akun anda!'),
+              ),
+            );
+          }
+        }
+      } else {
+        await AuthService.removeVerificationData();
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data anda ditolak, Lakukan registrasi ulang!'))
+          );
+        }
+      }
+    } catch (e) {
+      final localStatus = await AuthService.getStatus();
+
+      if (mounted) {
+        setState(() {
+          _status = localStatus ?? 'pending';
+          _loading = false;
+        });
+      }
     }
   }
 

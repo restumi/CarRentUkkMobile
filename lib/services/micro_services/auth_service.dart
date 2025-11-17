@@ -7,7 +7,7 @@ class AuthService {
   static const String _userKey = 'user_data';
   static const String _termsAcceptedKey = 'terms_accepted';
   static const String _verificationsStatusKey = 'verification_status';
-  static const String _verificatiionsEmailKey = 'verification_email';
+  static const String _verificationsEmailKey = 'verification_email';
 
   // ====================== LOGIN ======================
   static Future<Map<String, dynamic>> login(
@@ -113,7 +113,7 @@ class AuthService {
   }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_verificationsStatusKey, status);
-    await prefs.setString(_verificatiionsEmailKey, email);
+    await prefs.setString(_verificationsEmailKey, email);
   }
 
   // ====================== GET STATUS ======================
@@ -125,12 +125,20 @@ class AuthService {
   // ====================== GET EMAIL ======================
   static Future<String?> getEmail() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_verificatiionsEmailKey);
+    return prefs.getString(_verificationsEmailKey);
   }
 
   // ====================== CHECK STATUS ======================
   static Future<bool> isUserVerifications() async {
     final status = await getStatus();
     return status != null && status != 'rejected';
+  }
+
+  // ====================== REMOVE VERIFICATION DATA ======================
+  static Future<void> removeVerificationData() async {
+    final perfs = await SharedPreferences.getInstance();
+
+    await perfs.remove(_verificationsStatusKey);
+    await perfs.remove(_verificationsEmailKey);
   }
 }

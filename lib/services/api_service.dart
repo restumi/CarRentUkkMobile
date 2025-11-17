@@ -24,6 +24,16 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>> getStatus(String email) async {
+    final response = await http.get(Uri.parse('$baseUrl/status?email=$email'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('failed to get status : ${response.body}');
+    }
+  }
+
   // ====================== REGIST ======================
   static Future<Map<String, dynamic>> regist({
     required String name,
