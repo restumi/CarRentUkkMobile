@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:car_rent_mobile_app/services/models/car_model.dart';
 import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 
@@ -83,17 +84,23 @@ class ApiService {
   }
 
   // ====================== CARS ======================
-  static Future<List<dynamic>> getCars(String token) async {
+  static Future<List<Car>> getCars(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/cars'),
       headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      return List<dynamic>.from(jsonResponse['data']);
+      final body = jsonDecode(response.body);
+
+      if (body['success'] == true) {
+        final List<dynamic> jsonData = body['data'];
+        return jsonData.map((e) => Car.fromJson(e)).toList();
+      } else {
+        throw Exception(body['error'] ?? 'failed to get cars');
+      }
     } else {
-      throw Exception("failed to get cars: ${response.body}");
+      throw Exception("Error ${response.statusCode} : ${response.body}");
     }
   }
 

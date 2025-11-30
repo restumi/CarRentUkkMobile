@@ -1,11 +1,12 @@
+import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
 import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
-// import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import '../../widgets/bottom_navbar.dart';
-import 'package:car_rent_mobile_app/services/data/cars_dummy_data.dart';
+import 'package:car_rent_mobile_app/services/models/car_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,13 +15,18 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
+  bool _loading = true;
+  List<Car> _cars = [];
+  String? _error;
   String? _username = 'user';
 
   @override
   void initState() {
     super.initState();
     _loadUsername();
+    _loadCars();
   }
 
   Future<void> _loadUsername() async {
@@ -30,6 +36,37 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         setState(() {
           _username = userData['name'];
+        });
+      }
+    }
+  }
+
+  Future<void> _loadCars() async {
+    final token = await AuthService.getToken();
+
+    if (token == null) {
+      if (mounted) {
+        setState(() {
+          _error = 'Unauthorized';
+          _loading = false;
+        });
+      }
+      return;
+    }
+
+    try {
+      final cars = await ApiService.getCars(token);
+      if (mounted) {
+        setState(() {
+          _cars = cars;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'failed to get cars : $e';
+          _loading = false;
         });
       }
     }
@@ -49,6 +86,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_error != null) {
+      return Scaffold(
+        body: Center(child: Text('Error: $_error')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _loadCars,
+          child: const Icon(Icons.refresh),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.black,
       body: SafeArea(
@@ -129,9 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       right: 24,
                       top: 30,
                     ),
-                    itemCount: dummyCars.length,
+                    itemCount: _cars.length,
                     itemBuilder: (context, index) {
-                      final car = dummyCars[index];
+                      final car = _cars[index];
                       return GestureDetector(
                         onTap: () => _goToDetail(context, car),
                         child: Container(
@@ -164,12 +215,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           car.name,
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
-                                            fontSize: 14, // kecilin font
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
-                                          car.type,
+                                          car.brand,
                                           style: GoogleFonts.rubik(
                                             color: Colors.white70,
                                             fontSize: 12, // kecilin font
@@ -183,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          car.price,
+                                          "Rp${car.pricePerDay}",
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14,
@@ -211,10 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: SizedBox(
                                   height: 100,
                                   width: 259,
-                                  child: Image.asset(
-                                    car.image,
-                                    fit: BoxFit.scaleDown,
-                                  ),
+                                  // child: Image.asset(car.image,fit: BoxFit.scaleDown),
+                                  child: Image.network('${AppConfig.storageUrl}/${car.image}'),
                                 ),
                               ),
                             ],
