@@ -43,7 +43,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    if (_loading || authProvider.isLoading) {
+    if (_loading) {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(

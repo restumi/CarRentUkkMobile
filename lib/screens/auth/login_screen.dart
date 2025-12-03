@@ -15,45 +15,38 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
+  final AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
 
   void _submitLogin() async {
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) return;
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-      if (mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) =>
-              const Center(child: CircularProgressIndicator()),
-        );
-      }
-
-      final success = await authProvider.login(
+      await authProvider.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
       if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) Navigator.pop(context);
 
-      if (success && mounted) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacementNamed(context, AppRouter.home);
-        });
-      } else if (mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan.')));
+        ).showSnackBar(SnackBar(content: Text('Error : $e')));
       }
-    } else {
-      setState(() {
-        _autoValidateMode = AutovalidateMode.always;
-      });
     }
   }
 
