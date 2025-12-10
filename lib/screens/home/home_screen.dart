@@ -91,7 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+        )));
     }
 
     if (_error != null) {
@@ -263,12 +267,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 top: -30,
                                 left: 20,
                                 right: 20,
-                                child: SizedBox(
-                                  height: 100,
-                                  width: 259,
-                                  // child: Image.asset(car.image,fit: BoxFit.scaleDown),
-                                  child: Image.network('${AppConfig.storageUrl}/${car.image}'),
+                                child: ClipRRect(
+                                  child: SizedBox(
+                                    height: 100,
+                                    width: 259,
+                                    child: Image.network(
+                                      '${AppConfig.storageUrl}/${car.image}',
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
                                 ),
+                                
+                                // SizedBox(
+                                //   height: 100,
+                                //   width: 259,
+                                //   child: Image.network('${AppConfig.storageUrl}/${car.image}'),
+                                // ),
                               ),
                             ],
                           ),

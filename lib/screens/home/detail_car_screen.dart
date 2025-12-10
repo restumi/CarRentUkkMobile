@@ -1,5 +1,8 @@
 import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
+import 'package:car_rent_mobile_app/services/models/driver_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
@@ -13,9 +16,37 @@ class DetailCarScreen extends StatefulWidget {
 }
 
 class _DetailCarScreenState extends State<DetailCarScreen> {
+  List<Driver> _drivers = [];
+  Driver? _selectedDriver;
+
   @override
   void initState() {
     super.initState();
+    _loadDrivers();
+  }
+
+  Future<void> _loadDrivers() async {
+    try {
+      final token = await AuthService.getToken();
+      final driverJsonList = await ApiService.getDriver(token!);
+      final drivers = driverJsonList
+          .map((e) => Driver.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      if (mounted) {
+        setState(() {
+          _drivers = drivers;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('failed to get drivers')));
+      }
+
+      print('[ERRRORRR DETAIL SCREEN] gagal mengambil data drivers : $e');
+    }
   }
 
   @override
@@ -29,7 +60,11 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
     }
 
     void handleBookTransaction() {
-      Navigator.pushNamed(context, AppRouter.transaction);
+      Navigator.pushNamed(
+        context,
+        AppRouter.transaction,
+        arguments: {'car': widget.carData, 'driver': _selectedDriver},
+      );
     }
 
     return Scaffold(
@@ -134,6 +169,7 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
                                     Image.network(
                                       '${AppConfig.storageUrl}/${widget.carData['image']}',
                                       width: 300,
+                                      height: 200,
                                       fit: BoxFit.contain,
                                     ),
                                   ],
@@ -164,14 +200,41 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
                     children: [
-                      _driverOption(
-                        "Without Driver",
-                        "assets/images/driver.png",
+                      // without driver
+                      _buildDriverCard(
+                        name: 'Without Driver',
+                        imageUrl: null,
+                        isActive: _selectedDriver == null,
+                        onTap: () {
+                          setState(() {
+                            _selectedDriver = null;
+                          });
+                        },
                       ),
-                      _driverOption("Driver Name", "assets/images/driver.png"),
-                      _driverOption("Driver Name", "assets/images/driver.png"),
-                      _driverOption("Driver Name", "assets/images/driver.png"),
-                      _driverOption("Driver Name", "assets/images/driver.png"),
+
+                      if (_drivers.isEmpty)
+                        const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.blue,
+                            ),
+                          ),
+                        )
+                      else
+                        // list drivers
+                        for (final driver in _drivers)
+                          _buildDriverCard(
+                            name: driver.name,
+                            imageUrl: driver.image != '0'
+                                ? '${AppConfig.storageUrl}/${driver.image}'
+                                : null,
+                            isActive: _selectedDriver == driver,
+                            onTap: () {
+                              setState(() {
+                                _selectedDriver = driver;
+                              });
+                            },
+                          ),
                     ],
                   ),
                 ),
@@ -184,9 +247,17 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _carInfo("Gear", "Matic / manual", Icons.settings),
-                      _carInfo("Seats", (widget.carData['seat'] ?? 4).toString(), Icons.event_seat),
-                      _carInfo("Brand", widget.carData['brand'] ?? 'Unknown brand' , Icons.check_circle),
+                      _carInfo("Gear", "amfibi", Icons.settings),
+                      _carInfo(
+                        "Seats",
+                        (widget.carData['seat'] ?? 4).toString(),
+                        Icons.event_seat,
+                      ),
+                      _carInfo(
+                        "Brand",
+                        widget.carData['brand'] ?? 'Unknown brand',
+                        Icons.check_circle,
+                      ),
                     ],
                   ),
                 ),
@@ -258,30 +329,6 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
     );
   }
 
-  // ===== Driver Card =====
-  Widget _driverOption(String text, String iconPath) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: AppColors.abugelap2,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(iconPath, width: 40, height: 40),
-          const SizedBox(height: 8),
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.rubik(color: AppColors.white, fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ===== Car Info =====
   Widget _carInfo(String title, String value, IconData icon) {
     return Container(
@@ -313,6 +360,57 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDriverCard({
+    required String name,
+    String? imageUrl,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.blue : AppColors.abugelap2,
+          borderRadius: BorderRadius.circular(12),
+          border: isActive ? Border.all(color: Colors.white, width: 2) : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (imageUrl != null)
+              ClipOval(
+                child: Image.network(
+                  imageUrl,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.person,
+                    size: 40,
+                    color: AppColors.white,
+                  ),
+                ),
+              )
+            else
+              const Icon(Icons.person_off, size: 40, color: AppColors.white),
+            const SizedBox(height: 8),
+            Text(
+              name,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.rubik(
+                color: AppColors.white,
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 class Driver {
   final String name;
-  final String age;
+  final int age;
   final String gender;
   final String status;
   final String image;
@@ -12,4 +12,14 @@ class Driver {
     required this.status,
     required this.image,
   });
+
+  factory Driver.fromJson(Map<String, dynamic> json) {
+    return Driver(
+      name: json['name'] as String,
+      age: json['age'] as int,
+      gender: json['gender'] as String,
+      status: json['status'] as String,
+      image: json['photo'] as String
+    );
+  }
 }

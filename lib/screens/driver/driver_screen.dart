@@ -1,5 +1,8 @@
+import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
 import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
+import 'package:car_rent_mobile_app/services/models/driver_model.dart';
 import 'package:car_rent_mobile_app/styles/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,8 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   String? _username = 'user';
+  List<Driver> _drivers = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -22,6 +27,7 @@ class _DriverScreenState extends State<DriverScreen> {
   }
 
   Future<void> _loadUserName() async {
+    // username
     final userData = await AuthService.getUserData();
 
     if (userData != null && userData.containsKey('name')) {
@@ -30,6 +36,32 @@ class _DriverScreenState extends State<DriverScreen> {
           _username = userData['name'];
         });
       }
+    }
+
+    // load drivers
+    try {
+      final token = await AuthService.getToken();
+      final driverData = await ApiService.getDriver(token!);
+      final drivers = driverData
+          .map((e) => Driver.fromJson(e as Map<String, dynamic>))
+          .toList();
+      if (mounted) {
+        setState(() {
+          _drivers = drivers;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to load drivers')));
     }
   }
 
@@ -47,17 +79,13 @@ class _DriverScreenState extends State<DriverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> drivers = [
-      {
-        "name": "Mr. Aldrick",
-        "age": "25 th",
-        "gender": "Male",
-        "job": "Student",
-      },
-      {"name": "Mr. John", "age": "25 th", "gender": "Male", "job": "Student"},
-      {"name": "Mr. David", "age": "25 th", "gender": "Male", "job": "Student"},
-      {"name": "Mr. Kevin", "age": "25 th", "gender": "Male", "job": "Student"},
-    ];
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+        )));
+    }
 
     return Scaffold(
       backgroundColor: AppColors.black,
@@ -101,9 +129,9 @@ class _DriverScreenState extends State<DriverScreen> {
                   // List Drivers
                   Expanded(
                     child: ListView.builder(
-                      itemCount: drivers.length,
+                      itemCount: _drivers.length,
                       itemBuilder: (context, index) {
-                        final driver = drivers[index];
+                        final driver = _drivers[index];
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           padding: const EdgeInsets.all(12),
@@ -117,12 +145,27 @@ class _DriverScreenState extends State<DriverScreen> {
                               // Foto Driver
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  "assets/images/driver.png",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
+                                child: driver.image != '0'
+                                    ? Image.network(
+                                        "${AppConfig.storageUrl}/${driver.image}",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Image.asset(
+                                                  "assets/images/driver.png",
+                                                  width: 100,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                      )
+                                    : Image.asset(
+                                        "assets/images/driver.png",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                               const SizedBox(width: 16),
 
@@ -131,7 +174,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    driver["name"]!,
+                                    driver.name,
                                     style: GoogleFonts.rubik(
                                       color: AppColors.white,
                                       fontSize: 18,
@@ -140,21 +183,21 @@ class _DriverScreenState extends State<DriverScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    driver["age"]!,
+                                    '${driver.age} th',
                                     style: GoogleFonts.rubik(
                                       color: AppColors.white,
                                       fontSize: 16,
                                     ),
                                   ),
                                   Text(
-                                    driver["gender"]!,
+                                    driver.gender,
                                     style: GoogleFonts.rubik(
                                       color: AppColors.white,
                                       fontSize: 16,
                                     ),
                                   ),
                                   Text(
-                                    driver["job"]!,
+                                    driver.status,
                                     style: GoogleFonts.rubik(
                                       color: AppColors.white,
                                       fontSize: 16,
