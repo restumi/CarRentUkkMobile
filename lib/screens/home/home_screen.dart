@@ -72,8 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _goToDetail(BuildContext context, dynamic car) {
-    Navigator.pushNamed(context, AppRouter.detailCar, arguments: car);
+  void _goToDetail(BuildContext context, Car car) {
+    Navigator.pushNamed(
+      context, 
+      AppRouter.detailCar, 
+      arguments: car.toJson()
+    );
   }
 
   void _goToDriver(BuildContext context) {

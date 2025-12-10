@@ -52,7 +52,10 @@ class AppRouter {
 
     switch (settings.name) {
       case historyTransaction:
-        return _buildRoute(const HistoryTransactionScreen(), direction: direction);
+        return _buildRoute(
+          const HistoryTransactionScreen(),
+          direction: direction,
+        );
 
       case terms:
         return _buildRoute(const TermsScreen(), direction: direction);
@@ -67,8 +70,9 @@ class AppRouter {
         return _buildRoute(const ProfileScreen(), direction: direction);
 
       case detailCar:
+        final Map<String, dynamic> carData = settings.arguments as Map<String, dynamic>;
         return _buildRoute(
-          DetailCarScreen(dummyCars: settings.arguments),
+          DetailCarScreen(carData: carData),
           direction: direction,
         );
 

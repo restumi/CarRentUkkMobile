@@ -1,4 +1,6 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+// import 'package:car_rent_mobile_app/services/api_service.dart';
+// import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,9 +37,71 @@ class _TransactionScreenState extends State<TransactionScreen> {
     }
   }
 
-  void _rentNow(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.historyTransaction);
+  void _rentNow(){
+      Navigator.pushNamed(
+      context,
+      AppRouter.historyTransaction,
+    );
   }
+
+  // void _rentNow(BuildContext context) async {
+  //   final args =
+  //       ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+  //   final int? carId = args['car_id'];
+  //   final int? driverId = args['driver_id'];
+
+  //   if (carId == null) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text('Mobil tidak ditemukan')));
+  //     return;
+  //   }
+
+  //   if (_rangeStart == null || _rangeEnd == null) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text('Pilih tanggal terlebih dahulu!')));
+  //     return;
+  //   }
+
+  //   final String paymentMethod;
+  //   if (isChecked) {
+  //     paymentMethod = 'cod';
+  //   } else {
+  //     paymentMethod = 'transfer';
+  //   }
+
+  //   final token = await AuthService.getToken();
+  //   if (token == null) {}
+
+  //   try {
+  //     final transactionData = await ApiService.createTransaction({
+  //       'car_id': carId,
+  //       'driver_id': driverId, // opsional, bisa null
+  //       'start_date': DateFormat('yyyy-MM-dd').format(_rangeStart!),
+  //       'end_date': DateFormat('yyyy-MM-dd').format(_rangeEnd!),
+  //       'payment_method': paymentMethod,
+  //     }, token);
+
+  //     final transactionId = transactionData['data']['id'];
+
+  //     if (paymentMethod == 'transfer') {
+  //       final paymentData = await ApiService.createPayment(
+  //         transactionId,
+  //         token,
+  //       );
+  //       final snapToken = paymentData['snap_token'];
+
+  //       Navigator.push(context, AppRouter.historyTransaction);
+  //     } else {
+  //       Navigator.pushNamed(context, AppRouter.historyTransaction);
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text('data')));
+  //   }
+  // }
 
   void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusDay) {
     setState(() {
@@ -390,7 +454,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   // ===== Rent Now Button =====
                   Center(
                     child: GestureDetector(
-                      onTap: () => _rentNow(context),
+                      onTap: () => _rentNow(),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24,

@@ -15,6 +15,15 @@ class Car {
     required this.image,
   });
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'brand': brand,
+    'seat': seat,
+    'pricePerDay': pricePerDay,
+    'image': image
+  };
+
   factory Car.fromJson(Map<String, dynamic> json) {
     return Car(
       id: json['id'] as int,

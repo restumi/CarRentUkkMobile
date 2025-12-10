@@ -1,11 +1,22 @@
+import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 
-class DetailCarScreen extends StatelessWidget {
-  final dynamic dummyCars;
-  const DetailCarScreen({super.key, required this.dummyCars});
+class DetailCarScreen extends StatefulWidget {
+  final Map<String, dynamic> carData;
+  const DetailCarScreen({super.key, required this.carData});
+
+  @override
+  State<DetailCarScreen> createState() => _DetailCarScreenState();
+}
+
+class _DetailCarScreenState extends State<DetailCarScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +102,7 @@ class DetailCarScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      dummyCars.name,
+                                      widget.carData['name'] ?? 'Unknown name',
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontSize: 40,
@@ -112,10 +123,19 @@ class DetailCarScreen extends StatelessWidget {
                                       child: Container(
                                         width: 250,
                                         height: 180,
-                                        color: const Color.fromARGB(255, 0, 100, 249),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          0,
+                                          100,
+                                          249,
+                                        ),
                                       ),
                                     ),
-                                    Image.asset(dummyCars.image, width: 300, fit: BoxFit.contain,),
+                                    Image.network(
+                                      '${AppConfig.storageUrl}/${widget.carData['image']}',
+                                      width: 300,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -164,9 +184,9 @@ class DetailCarScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _carInfo("Gear", "Matic", Icons.settings),
-                      _carInfo("Seats", "6", Icons.event_seat),
-                      _carInfo("Brand", "Toyota", Icons.check_circle),
+                      _carInfo("Gear", "Matic / manual", Icons.settings),
+                      _carInfo("Seats", (widget.carData['seat'] ?? 4).toString(), Icons.event_seat),
+                      _carInfo("Brand", widget.carData['brand'] ?? 'Unknown brand' , Icons.check_circle),
                     ],
                   ),
                 ),
@@ -195,7 +215,7 @@ class DetailCarScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Rp 1.000.000 / day",
+                    "Rp ${widget.carData['pricePerDay'] ?? 350.000} / day",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
                       fontSize: 18,

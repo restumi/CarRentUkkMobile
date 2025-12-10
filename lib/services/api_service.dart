@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 import 'package:car_rent_mobile_app/services/models/car_model.dart';
 import 'package:http/http.dart' as http;
@@ -165,6 +166,32 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('failed to create transaction: ${response.body}');
+    }
+  }
+
+  // ====================== TRANSACTION ======================
+  static Future<Map<String, dynamic>> createPayment(
+    int transactionId,
+    String token,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/transactions/$transactionId/payment'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+
+      if (json['success'] == true) {
+        return json['data'];
+      } else {
+        throw Exception(json['message'] ?? 'gagal memuat pembayaran');
+      }
+    } else {
+      throw Exception('Error ${response.statusCode} : ${response.body}');
     }
   }
 }
