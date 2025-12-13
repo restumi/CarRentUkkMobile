@@ -96,13 +96,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
     // create transaction
     try {
-      final transactionResponse = await ApiService.createTransaction({
+      final Map<String, dynamic> transactionSheet = {
         'car_id': carId,
-        'driver_id': driverId,
         'start_date': DateFormat('yyyy-MM-dd').format(_rangeStart!),
         'end_date': DateFormat('yyyy-MM-dd').format(_rangeEnd!),
         'payment_method': paymentMethod,
-      }, token);
+      };
+
+      if (driverId != null) {
+        transactionSheet['driver_id'] = driverId;
+      }
+
+      final transactionResponse = await ApiService.createTransaction(transactionSheet, token);
 
       final transactionData =
           transactionResponse['data'] as Map<String, dynamic>;
