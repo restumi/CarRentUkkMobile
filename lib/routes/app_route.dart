@@ -4,6 +4,7 @@ import 'package:car_rent_mobile_app/screens/auth/register_screen.dart';
 import 'package:car_rent_mobile_app/screens/auth/verify_screen.dart';
 import 'package:car_rent_mobile_app/screens/auth/waiting_page_screen.dart';
 import 'package:car_rent_mobile_app/screens/driver/driver_screen.dart';
+import 'package:car_rent_mobile_app/screens/payment/midtrans_screen.dart';
 import 'package:car_rent_mobile_app/screens/profile/history_transaction_screen.dart';
 import 'package:car_rent_mobile_app/screens/terms_after_login.dart';
 import 'package:car_rent_mobile_app/screens/terms_screen.dart';
@@ -12,6 +13,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/home/transaction_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/home/detail_car_screen.dart';
+import 'package:car_rent_mobile_app/services/models/driver_model.dart';
 
 enum SlideDirection { left, right }
 
@@ -41,6 +43,7 @@ class AppRouter {
   static const String terms = '/terms';
   static const String termsAfterLogin = '/terms-after-login';
   static const String historyTransaction = '/history-transaction';
+  static const String midtransPayment = '/midtrans-payment';
 
   // === Generate Route ===
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -60,6 +63,10 @@ class AppRouter {
       case terms:
         return _buildRoute(const TermsScreen(), direction: direction);
 
+      case midtransPayment:
+        final String snapToken = settings.arguments as String;
+        return _buildRoute(MidtransScreen(snapToken: snapToken), direction: direction);
+
       case termsAfterLogin:
         return _buildRoute(const TermsAfterLogin(), direction: direction);
 
@@ -70,14 +77,36 @@ class AppRouter {
         return _buildRoute(const ProfileScreen(), direction: direction);
 
       case detailCar:
-        final Map<String, dynamic> carData = settings.arguments as Map<String, dynamic>;
+        final Map<String, dynamic> carData =
+            settings.arguments as Map<String, dynamic>;
         return _buildRoute(
           DetailCarScreen(carData: carData),
           direction: direction,
         );
 
+      // case transaction:
+      //   return _buildRoute(TransactionScreen(), direction: direction);
       case transaction:
-        return _buildRoute(const TransactionScreen(), direction: direction);
+        Map<String, dynamic>? carData;
+        Driver? driver;
+        SlideDirection directionToUse = SlideDirection.right;
+
+        if (settings.arguments is Map<String, dynamic>) {
+          final argsMap = settings.arguments as Map<String, dynamic>;
+          carData = argsMap['car'] as Map<String, dynamic>?;
+          driver = argsMap['driver'] as Driver?;
+          if (argsMap['direction'] is SlideDirection) {
+            directionToUse = argsMap['direction'] as SlideDirection;
+          }
+        }
+
+        return _buildRoute(
+          TransactionScreen(
+            carData: carData,
+            selectedDriver: driver,
+          ),
+          direction: directionToUse,
+        );
 
       case driver:
         return _buildRoute(const DriverScreen(), direction: direction);

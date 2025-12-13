@@ -1,6 +1,7 @@
 import 'package:car_rent_mobile_app/routes/app_route.dart';
-// import 'package:car_rent_mobile_app/services/api_service.dart';
-// import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
+import 'package:car_rent_mobile_app/services/models/driver_model.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,7 +9,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({super.key});
+  final Map<String, dynamic>? carData;
+  final Driver? selectedDriver;
+
+  const TransactionScreen({super.key, this.carData, this.selectedDriver});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -21,10 +25,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   bool isChecked = false;
+  bool tf = false;
+  Map<String, dynamic>? _carData;
+  Driver? _selectedDriver;
 
   @override
   void initState() {
     super.initState();
+    _carData = widget.carData;
+    _selectedDriver = widget.selectedDriver;
     _selectedDay = _focusDay;
   }
 
@@ -37,71 +46,105 @@ class _TransactionScreenState extends State<TransactionScreen> {
     }
   }
 
-  void _rentNow(){
-      Navigator.pushNamed(
-      context,
-      AppRouter.historyTransaction,
-    );
-  }
-
-  // void _rentNow(BuildContext context) async {
-  //   final args =
-  //       ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-  //   final int? carId = args['car_id'];
-  //   final int? driverId = args['driver_id'];
-
-  //   if (carId == null) {
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(SnackBar(content: Text('Mobil tidak ditemukan')));
-  //     return;
-  //   }
-
-  //   if (_rangeStart == null || _rangeEnd == null) {
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(SnackBar(content: Text('Pilih tanggal terlebih dahulu!')));
-  //     return;
-  //   }
-
-  //   final String paymentMethod;
-  //   if (isChecked) {
-  //     paymentMethod = 'cod';
-  //   } else {
-  //     paymentMethod = 'transfer';
-  //   }
-
-  //   final token = await AuthService.getToken();
-  //   if (token == null) {}
-
-  //   try {
-  //     final transactionData = await ApiService.createTransaction({
-  //       'car_id': carId,
-  //       'driver_id': driverId, // opsional, bisa null
-  //       'start_date': DateFormat('yyyy-MM-dd').format(_rangeStart!),
-  //       'end_date': DateFormat('yyyy-MM-dd').format(_rangeEnd!),
-  //       'payment_method': paymentMethod,
-  //     }, token);
-
-  //     final transactionId = transactionData['data']['id'];
-
-  //     if (paymentMethod == 'transfer') {
-  //       final paymentData = await ApiService.createPayment(
-  //         transactionId,
-  //         token,
-  //       );
-  //       final snapToken = paymentData['snap_token'];
-
-  //       Navigator.push(context, AppRouter.historyTransaction);
-  //     } else {
-  //       Navigator.pushNamed(context, AppRouter.historyTransaction);
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(SnackBar(content: Text('data')));
-  //   }
+  // void _rentNow() {
+  //   Navigator.pushNamed(context, AppRouter.historyTransaction);
   // }
+
+  Future<void> _rentNow() async {
+    // ambil data
+
+    if (_carData == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('failed to get cars.')));
+      }
+      return;
+    }
+
+    // data car and drivers
+    final Driver? selectedDriver = _selectedDriver;
+    final int? carId = _carData!['id'];
+    final int? driverId = selectedDriver?.id;
+
+    // check cars and driver
+    if (carId == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('invalid ID cars!')));
+      return;
+    }
+
+    if (_rangeStart == null || _rangeEnd == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('please select the day first!')));
+      return;
+    }
+
+    final String paymentMethod = isChecked ? 'cod' : 'transfer';
+    final String? token = await AuthService.getToken();
+
+    if (token == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('invalid token, re login please!')),
+        );
+      }
+      return;
+    }
+
+    // create transaction
+    try {
+      final transactionResponse = await ApiService.createTransaction({
+        'car_id': carId,
+        'driver_id': driverId,
+        'start_date': DateFormat('yyyy-MM-dd').format(_rangeStart!),
+        'end_date': DateFormat('yyyy-MM-dd').format(_rangeEnd!),
+        'payment_method': paymentMethod,
+      }, token);
+
+      final transactionData =
+          transactionResponse['data'] as Map<String, dynamic>;
+      final transactionId = transactionData['id'];
+
+      if (isChecked) {
+        // METHOD COD
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Transaction created with COD!')),
+          );
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRouter.historyTransaction,
+            (route) => false,
+          );
+        }
+      } else {
+        // TRANSFER METHOD
+        final paymentData = await ApiService.createPayment(
+          transactionId,
+          token,
+        );
+        final String snapToken = paymentData['snap_token'];
+
+        if (mounted) {
+          Navigator.pushNamed(
+            context,
+            AppRouter.midtransPayment,
+            arguments: snapToken,
+          );
+        }
+      }
+    } catch (e) {
+      print('[ERRORRRR CREATE TRANSACTION] : $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('failed to order!')));
+      }
+    }
+  }
 
   void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusDay) {
     setState(() {
@@ -406,6 +449,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             onChanged: (value) {
                               setState(() {
                                 isChecked = value ?? false;
+                                tf = false;
                               });
                             },
                           ),
@@ -439,10 +483,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         SizedBox(
                           height: 20,
                           width: 20,
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            color: AppColors.white,
-                            size: 18,
+                          child: Checkbox(
+                            value: tf,
+                            onChanged: (value) {
+                              setState(() {
+                                tf = value ?? false;
+                                isChecked = false;
+                              });
+                            },
+                            activeColor: AppColors.blue,
                           ),
                         ),
                       ],

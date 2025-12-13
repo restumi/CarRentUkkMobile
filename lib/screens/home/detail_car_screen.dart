@@ -30,6 +30,7 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
       final token = await AuthService.getToken();
       final driverJsonList = await ApiService.getDriver(token!);
       final drivers = driverJsonList
+          .where((e) => (e as Map<String, dynamic>)['status'] == 'available')
           .map((e) => Driver.fromJson(e as Map<String, dynamic>))
           .toList();
 
@@ -63,7 +64,10 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
       Navigator.pushNamed(
         context,
         AppRouter.transaction,
-        arguments: {'car': widget.carData, 'driver': _selectedDriver},
+        arguments: {
+          'car': widget.carData,
+          'driver': _selectedDriver
+        }
       );
     }
 

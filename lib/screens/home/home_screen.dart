@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
   bool _loading = true;
   List<Car> _cars = [];
@@ -65,19 +64,18 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'failed to get cars : $e';
           _loading = false;
         });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('failed to load cars'))
+        );
       }
     }
   }
 
   void _goToDetail(BuildContext context, Car car) {
-    Navigator.pushNamed(
-      context, 
-      AppRouter.detailCar, 
-      arguments: car.toJson()
-    );
+    Navigator.pushNamed(context, AppRouter.detailCar, arguments: car.toJson());
   }
 
   void _goToDriver(BuildContext context) {
@@ -93,9 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_loading) {
       return const Scaffold(
         backgroundColor: Colors.black,
-        body: Center(child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
-        )));
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+          ),
+        ),
+      );
     }
 
     if (_error != null) {
@@ -277,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                
+
                                 // SizedBox(
                                 //   height: 100,
                                 //   width: 259,
