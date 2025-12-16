@@ -1,4 +1,7 @@
+import 'package:car_rent_mobile_app/config/api_config.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
+import 'package:car_rent_mobile_app/services/api_service.dart';
+import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
@@ -12,6 +15,9 @@ class HistoryTransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<HistoryTransactionScreen> {
   String selectedFilter = "Requested";
+  bool _loading = true;
+  List<Map<String, dynamic>> _transaction = [];
+  String? _error;
 
   final List<Map<String, String>> transactions = [
     {
@@ -51,33 +57,112 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTransaction();
+  }
+
+  Future<void> _loadTransaction() async {
+    final token = await AuthService.getToken();
+
+    if (token == null) {
+      if (mounted) {
+        Navigator.pushNamed(context, AppRouter.login);
+        setState(() {
+          _loading = false;
+        });
+      }
+      return;
+    }
+
+    try {
+      final List<dynamic> transaction = await ApiService.getTransaction(token);
+
+      final List<Map<String, dynamic>> formatted = transaction
+          .map((tx) => _formatTransaction(tx as Map<String, dynamic>))
+          .toList();
+
+      if (mounted) {
+        setState(() {
+          _transaction = formatted;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('failed to get transaction data!')),
+        );
+
+        print('FAILED TO GET TRANSACTION : $e');
+      }
+    }
+  }
+
+  Map<String, dynamic> _formatTransaction(Map<String, dynamic> tx) {
+    final car = tx['car'] as Map<String, dynamic>;
+    final driver = tx['driver'] as Map<String, dynamic>?;
+
+    String status = tx['status_transaction'] as String;
+    status = status[0].toUpperCase() + status.substring(1);
+
+    return {
+      "car": car['name'],
+      "days": "${_daysBetween(tx['start_date'], tx['end_date'])} days",
+      "plate": "H XXXX XX",
+      "status": status,
+      "image": "${AppConfig.storageUrl}/${car['image']}",
+      "payment_status": tx['payment_status'],
+      "total_price": tx['total_price'],
+      "driver": driver?['name'] ?? "without driver",
+    };
+  }
+
+  int _daysBetween(String startStr, String endStr) {
+    final start = DateTime.parse(startStr);
+    final end = DateTime.parse(endStr);
+    return end.difference(start).inDays;
+  }
+
   void _back(BuildContext context) {
-    Navigator.pushNamed(context, AppRouter.profile, arguments: SlideDirection.left);
+    Navigator.pushNamed(
+      context,
+      AppRouter.profile,
+      arguments: SlideDirection.left,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final filtered = transactions
-        .where((t) => t["status"] == selectedFilter)
+    if (_loading) {
+      return const Scaffold(
+        backgroundColor: AppColors.black,
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+          ),
+        ),
+      );
+    }
+
+    if (_error != null) {
+      return Scaffold(
+        backgroundColor: AppColors.black,
+        body: Center(child: Text('Error : $_error')),
+      );
+    }
+
+    final filtered = _transaction
+        .where((t) => t['status'] == selectedFilter)
         .toList();
 
     return Scaffold(
       backgroundColor: AppColors.black,
-      // appBar: AppBar(
-      //   backgroundColor: AppColors.black,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   title: Text(
-      //     "Transaction",
-      //     style: GoogleFonts.rubik(
-      //       color: AppColors.white,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      // ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -98,7 +183,11 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                     children: [
                       IconButton(
                         onPressed: () => _back(context),
-                        icon: Icon(Icons.arrow_back_ios, color: AppColors.white, size: 20,),
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.white,
+                          size: 20,
+                        ),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -107,24 +196,36 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                           style: GoogleFonts.rubik(
                             color: AppColors.white,
                             fontSize: 20,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  SizedBox(height:40,),
+                  SizedBox(height: 40),
 
                   // ===== Filter icons =====
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildFilterIcon(Icons.send, "Requested"),
-                      Container(width: 1, height: 60, color: const Color.fromARGB(174, 255, 255, 255)),
+                      Container(
+                        width: 1,
+                        height: 60,
+                        color: const Color.fromARGB(174, 255, 255, 255),
+                      ),
                       _buildFilterIcon(Icons.cancel, "Rejected"),
-                      Container(width: 1, height: 60, color: const Color.fromARGB(174, 255, 255, 255)),
+                      Container(
+                        width: 1,
+                        height: 60,
+                        color: const Color.fromARGB(174, 255, 255, 255),
+                      ),
                       _buildFilterIcon(Icons.file_copy, "Accepted"),
-                      Container(width: 1, height: 60, color: const Color.fromARGB(174, 255, 255, 255)),
+                      Container(
+                        width: 1,
+                        height: 60,
+                        color: const Color.fromARGB(174, 255, 255, 255),
+                      ),
                       _buildFilterIcon(Icons.event_available, "Completed"),
                     ],
                   ),
@@ -136,7 +237,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          SizedBox(width: 20,),
+                          SizedBox(width: 20),
                           Text(
                             "$selectedFilter Transaction",
                             style: GoogleFonts.rubik(
@@ -164,20 +265,24 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.abuGelap)
+                            border: Border.all(color: AppColors.abuGelap),
                           ),
                           child: Row(
                             children: [
-                              Image.asset(trx["image"]!, width: 100),
+                              Image.network(trx["image"] as String, width: 100),
                               const SizedBox(width: 6),
-                              Container(width: 1, height: 70, color: AppColors.abuGelap,),
+                              Container(
+                                width: 1,
+                                height: 70,
+                                color: AppColors.abuGelap,
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      trx["car"]!,
+                                      trx["car"] as String,
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontWeight: FontWeight.bold,
@@ -185,21 +290,21 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                                       ),
                                     ),
                                     Text(
-                                      trx["days"]!,
+                                      trx["days"] as String,
                                       style: GoogleFonts.rubik(
                                         color: AppColors.abuTerang,
                                         fontSize: 14,
                                       ),
                                     ),
                                     Text(
-                                      trx["plate"]!,
+                                      trx["driver"] as String,
                                       style: GoogleFonts.rubik(
                                         color: AppColors.abuTerang,
                                         fontSize: 14,
                                       ),
                                     ),
                                     Text(
-                                      trx["status"]!,
+                                      trx["status"] as String,
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontSize: 14,
@@ -240,18 +345,18 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
               color: isActive ? AppColors.blue : AppColors.white,
               size: 50,
             ),
-            const SizedBox(height: 4,),
+            const SizedBox(height: 4),
             Text(
               label,
               style: GoogleFonts.rubik(
                 color: isActive ? AppColors.blue : AppColors.white,
                 fontSize: 12,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
               ),
-            )
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }

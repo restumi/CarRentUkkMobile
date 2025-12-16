@@ -142,8 +142,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      return List<dynamic>.from(jsonResponse['data']);
-      // return jsonDecode(response.body);
+      return jsonResponse['data'];
     } else {
       throw Exception('failed to get transaction: ${response.body}');
     }
@@ -169,7 +168,6 @@ class ApiService {
     }
   }
 
-  // ====================== TRANSACTION ======================
   static Future<Map<String, dynamic>> createPayment(
     int transactionId,
     String token,
