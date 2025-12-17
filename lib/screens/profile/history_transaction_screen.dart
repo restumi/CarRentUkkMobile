@@ -304,7 +304,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                                       ),
                                     ),
                                     Text(
-                                      trx["status"] as String,
+                                      trx["total_price"] as String,
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontSize: 14,
