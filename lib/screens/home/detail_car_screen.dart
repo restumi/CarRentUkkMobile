@@ -45,8 +45,6 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
           context,
         ).showSnackBar(SnackBar(content: Text('failed to get drivers')));
       }
-
-      print('[ERRRORRR DETAIL SCREEN] gagal mengambil data drivers : $e');
     }
   }
 

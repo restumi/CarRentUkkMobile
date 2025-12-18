@@ -142,7 +142,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
         }
       }
     } catch (e) {
-      print('[ERRORRRR CREATE TRANSACTION] : $e');
       if (mounted) {
         ScaffoldMessenger.of(
           context,

@@ -19,44 +19,6 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
   List<Map<String, dynamic>> _transaction = [];
   String? _error;
 
-  final List<Map<String, String>> transactions = [
-    {
-      "car": "Porsche Cammon",
-      "days": "3 days",
-      "plate": "H 1234 CP",
-      "status": "Requested",
-      "image": "assets/images/cars/car.png",
-    },
-    {
-      "car": "Porsche Cammon",
-      "days": "3 days",
-      "plate": "H 1234 CP",
-      "status": "Rejected",
-      "image": "assets/images/cars/car.png",
-    },
-    {
-      "car": "Porsche Cammon",
-      "days": "3 days",
-      "plate": "H 1234 CP",
-      "status": "Accepted",
-      "image": "assets/images/cars/car.png",
-    },
-    {
-      "car": "Porsche Cammon",
-      "days": "3 days",
-      "plate": "H 1234 CP",
-      "status": "Completed",
-      "image": "assets/images/cars/car.png",
-    },
-    {
-      "car": "Porsche Cammon",
-      "days": "3 days",
-      "plate": "H 1234 CP",
-      "status": "Completed",
-      "image": "assets/images/cars/car.png",
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -98,8 +60,6 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('failed to get transaction data!')),
         );
-
-        print('FAILED TO GET TRANSACTION : $e');
       }
     }
   }

@@ -56,12 +56,11 @@ class _DriverScreenState extends State<DriverScreen> {
         setState(() {
           _isLoading = false;
         });
+    
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to load drivers')));
       }
-
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Failed to load drivers')));
     }
   }
 
