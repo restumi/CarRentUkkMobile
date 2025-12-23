@@ -81,6 +81,15 @@ class AuthService {
     await prefs.setString(_userKey, jsonEncode(userData));
   }
 
+  // ====================== GET USER ID ======================
+  static Future<int?> getUserId() async{
+    final userData = await getUserData();
+    if (userData != null && userData['id'] is int) {
+      return userData['id'] as int;
+    }
+    throw Exception('User ID not found');
+  }
+
   // ====================== TERMS ACCEPTANCE ======================
   static Future<bool> isTermsAccepted() async {
     final prefs = await SharedPreferences.getInstance();

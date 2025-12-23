@@ -14,6 +14,7 @@ import '../screens/home/transaction_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/home/detail_car_screen.dart';
 import 'package:car_rent_mobile_app/services/models/driver_model.dart';
+import '../screens/profile/chat_screen.dart';
 
 enum SlideDirection { left, right }
 
@@ -44,6 +45,7 @@ class AppRouter {
   static const String termsAfterLogin = '/terms-after-login';
   static const String historyTransaction = '/history-transaction';
   static const String midtransPayment = '/midtrans-payment';
+  static const String chat = '/chat';
 
   // === Generate Route ===
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -69,6 +71,9 @@ class AppRouter {
 
       case termsAfterLogin:
         return _buildRoute(const TermsAfterLogin(), direction: direction);
+
+      case chat:
+        return _buildRoute(const ChatScreen(), direction: direction);
 
       case home:
         return _buildRoute(const HomeScreen(), direction: direction);

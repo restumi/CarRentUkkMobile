@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'package:car_rent_mobile_app/services/models/car_model.dart';
+import 'package:car_rent_mobile_app/services/models/chat_models.dart';
 import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 
@@ -190,6 +191,49 @@ class ApiService {
       }
     } else {
       throw Exception('Error ${response.statusCode} : ${response.body}');
+    }
+  }
+
+  // ====================== CHAT ======================
+
+  static Future<ChatMessage> sendMessage(
+    int adminId, 
+    String message,
+    String token,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/send-message'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'receiver_id': adminId,
+        'message': message,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return ChatMessage.fromJson(jsonDecode(response.body)['data']);
+    } else {
+      throw Exception('failed to send message: ${response.body}');
+    }
+  }
+
+  static Future<List<ChatMessage>> getMessages(int adminId, String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/messages/$adminId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body)['data'];
+      return jsonData.map((e) => ChatMessage.fromJson(e)).toList();
+    } else {
+      throw Exception('failed to fetch messages: ${response.body}');
     }
   }
 }

@@ -49,6 +49,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamed(context, AppRouter.termsAfterLogin);
   }
 
+  void _chat(BuildContext context) {
+    Navigator.pushNamed(context, AppRouter.chat);
+  }
+
   void _goTodriver(BuildContext context) {
     Navigator.pushNamed(
       context,
@@ -137,6 +141,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icons.article,
                         title: "Terms App",
                         onTap: () => _temrs(context),
+                      ),
+                      _buildMenuItem(
+                        icon: Icons.article,
+                        title: "Chat Admin",
+                        onTap: () => _chat(context),
                       ),
                       _buildMenuItem(
                         icon: Icons.logout,
