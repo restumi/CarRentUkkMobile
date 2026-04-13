@@ -4,7 +4,7 @@ class ChatMessage {
   final int receiverId;
   // bool isRead;
   final String message;
-  final String createdAt;
+  final String? createdAt;
 
   ChatMessage({
     required this.id,
@@ -20,7 +20,7 @@ class ChatMessage {
       senderId: json['sender_id'],
       receiverId: json['receiver_id'],
       message: json['message'],
-      createdAt: json['created_at'],
+      createdAt: json['created_at'] as String?,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import '../../services/models/chat_models.dart';
 import '../../services/pusher_service.dart';
+import 'package:intl/intl.dart';
 
 class ChatScreen extends StatefulWidget {
   final int adminId;
@@ -125,26 +126,52 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isInSameGroup(ChatMessage msg1, ChatMessage msg2) {
     if (msg1.senderId != msg2.senderId) return false;
 
-    final time1 = _parseMessageTime(msg1);
-    final time2 = _parseMessageTime(msg2);
+    final time1 = _parseMessageTimeToJakarta(msg1.createdAt);
+    final time2 = _parseMessageTimeToJakarta(msg2.createdAt);
 
     if (time1 == null || time2 == null) return false;
 
-    final diff = time1.difference(time2).inMinutes.abs();
-    return diff < 2;
+    return time1.difference(time2).inMinutes.abs() < 2;
   }
 
-  DateTime? _parseMessageTime(ChatMessage msg) {
-    final timeStr = msg.createdAt;
+  DateTime? _parseMessageTimeToJakarta(String? timeStr) {
+    if (timeStr == null || timeStr.isEmpty) return null;
+    
     try {
+      if (timeStr.contains('T')) {
+        DateTime dt = DateTime.parse(timeStr);
+        if (timeStr.endsWith('Z') || timeStr.contains('+00:00')) {
+          return dt.add(const Duration(hours: 7));
+        }
+        return dt;
+      }
+      
+      final rfc2822Regex = RegExp(
+        r'[A-Z][a-z]{2},\s+\d{1,2}\s+[A-Z][a-z]{2}\s+\d{4}\s+\d{2}:\d{2}:\d{2}\s+[+-]\d{4}',
+      );
+      
+      final match = rfc2822Regex.firstMatch(timeStr);
+      if (match != null) {
+        final dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z', 'en_US');
+        DateTime dt = dateFormat.parse(match.group(0)!);
+        return dt.add(const Duration(hours: 7));
+      }
+      
       return DateTime.parse(timeStr);
     } catch (_) {
       return null;
     }
   }
 
-  String _formatTimeDisplay(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String _formatTimeDisplay(String timeStr) {
+    final dt = _parseMessageTimeToJakarta(timeStr);
+    if (dt != null) {
+      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    }
+    
+    final regex = RegExp(r'(\d{2}):(\d{2})');
+    final match = regex.firstMatch(timeStr);
+    return match != null ? '${match.group(1)}:${match.group(2)}' : timeStr;
   }
 
   bool _shouldShowTimestamp(int index) {
@@ -256,7 +283,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 final isMe = msg.senderId == _currentUserId;
                 final showTimestamp = _shouldShowTimestamp(index);
                 final bubbleRadius = _getBubbleRadius(index);
-                final msgTime = _parseMessageTime(msg);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(
@@ -275,10 +301,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         _buildMessageBubble(msg, isMe, bubbleRadius),
 
-                        if (showTimestamp && msgTime != null) ...[
+                        if (showTimestamp && msg.createdAt != null) ...[
                           const SizedBox(height: 4),
                           Text(
-                            _formatTimeDisplay(msgTime),
+                            _formatTimeDisplay(msg.createdAt!),
                             style: TextStyle(
                               color: isMe ? Colors.blue[200] : Colors.grey[500],
                               fontSize: 10,
