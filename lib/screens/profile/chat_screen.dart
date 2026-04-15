@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     await _loadMessages();
-    _initPusher();
+    await _initPusher();
   }
 
   Future<void> _loadMessages() async {
@@ -71,20 +71,28 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _initPusher() async {
+  Future<void> _initPusher() async {
+    if (_currentUserId == null || _token == null) {
+      return;
+    }
+
     _pusher = PusherService(userId: _currentUserId!, token: _token!);
+    
     _pusher.bindMessage((data) {
+      
       final msg = ChatMessage.fromJson(data);
       if (mounted) {
         setState(() {
           if (!_messages.any((m) => m.id == msg.id)) {
             _messages.add(msg);
+          } else {
           }
         });
         _scrollToBottom();
       }
     });
-    _pusher.connect();
+    
+    await _pusher.connect();
   }
 
   Future<void> _sendMessage() async {
