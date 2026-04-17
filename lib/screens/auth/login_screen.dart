@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../services/provider/auth_provider.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,21 +34,77 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await authProvider.login(
+      final success = await authProvider.login(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
       if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) Navigator.pop(context);
 
+      if (success && mounted) {
+        Navigator.pushReplacementNamed(context, AppRouter.home);
+      } 
+      else if (mounted) {
+        String rawMessage = authProvider.lastError ?? 'Login gagal, silakan coba lagi';
+
+        String message = _getErrorMessage(rawMessage);
+        
+        _showErrorSnackBar(context, message);
+        print('❌❌: $message');
+      }
+      
+    } catch (e) {
+      // Fallback: kalau ada exception yang lolos (jarang terjadi)
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error : $e')));
+        Navigator.pop(context);
+        _showErrorSnackBar(context, _getErrorMessage(e));
       }
     }
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message, style: const TextStyle(color: Colors.white))),
+          ],
+        ),
+        backgroundColor: AppColors.red,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
+  String _getErrorMessage(dynamic error) {
+    final msg = error.toString();
+    
+    final jsonStart = msg.lastIndexOf('{');
+    final jsonEnd = msg.lastIndexOf('}') + 1;
+    
+    if (jsonStart != -1 && jsonEnd != -1 && jsonEnd > jsonStart) {
+      try {
+        final jsonString = msg.substring(jsonStart, jsonEnd);
+        final jsonData = jsonDecode(jsonString);
+        
+        return jsonData['message'] 
+            ?? jsonData['error'] 
+            ?? jsonData['errors']?.toString() 
+            ?? 'Terjadi kesalahan';
+      } catch (_) {
+      }
+    }
+    
+    // Fallback: parse cara lama
+    if (msg.contains('Login gagal:')) {
+      return msg.split('Login gagal:').last.trim();
+    }
+    
+    return msg.length > 100 ? 'Terjadi kesalahan, silakan coba lagi' : msg;
   }
 
   void _handleRegist() async {

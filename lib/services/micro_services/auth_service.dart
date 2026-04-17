@@ -25,18 +25,37 @@ class AuthService {
         final token = response['token'] as String;
         final userData = response['data'] ?? {};
 
-        // Save user token
         await _saveToken(token);
         await _saveUserData(userData);
 
         return response;
       } else {
-        throw Exception(
-          'Login gagal: ${response['message'] ?? 'Unknown error'}',
-        );
+        final message = response['message'] ?? response['error'] ?? 'Login gagal';
+        throw Exception(message);
       }
     } catch (e) {
-      throw Exception('Login gagal: $e');
+      final errorMsg = e.toString();
+      
+      if (errorMsg.contains('failed to Login:')) {
+        try {
+          final jsonStart = errorMsg.lastIndexOf('{');
+          final jsonEnd = errorMsg.lastIndexOf('}') + 1;
+          
+          if (jsonStart != -1 && jsonEnd > jsonStart) {
+            final jsonString = errorMsg.substring(jsonStart, jsonEnd);
+            final jsonData = jsonDecode(jsonString);
+            
+            final cleanMessage = jsonData['message'] 
+                              ?? jsonData['error'] 
+                              ?? 'Login gagal';
+            throw Exception(cleanMessage);
+          }
+        } catch (_) {
+        }
+      }
+      
+      if (e is Exception) rethrow;
+      throw Exception('Koneksi gagal, periksa internet Anda');
     }
   }
 
