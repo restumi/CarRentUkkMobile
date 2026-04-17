@@ -78,7 +78,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
       "status": status,
       "image": "${AppConfig.storageUrl}/${car['image']}",
       "payment_status": tx['payment_status'],
-      "total_price": tx['total_price'],
+      "total_price": tx['total_price'].toString(),
       "driver": driver?['name'] ?? "without driver",
     };
   }
@@ -187,6 +187,12 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                         color: const Color.fromARGB(174, 255, 255, 255),
                       ),
                       _buildFilterIcon(Icons.event_available, "Completed"),
+                      Container(
+                        width: 1,
+                        height: 60,
+                        color: const Color.fromARGB(174, 255, 255, 255),
+                      ),
+                      _buildFilterIcon(Icons.close, "Cancelled"),
                     ],
                   ),
                   SizedBox(height: 40),
@@ -264,7 +270,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                                       ),
                                     ),
                                     Text(
-                                      trx["total_price"] as String,
+                                      trx["total_price"],
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontSize: 14,
@@ -297,20 +303,20 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
         });
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           children: [
             Icon(
               icon,
               color: isActive ? AppColors.blue : AppColors.white,
-              size: 50,
+              size: 40,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: GoogleFonts.rubik(
                 color: isActive ? AppColors.blue : AppColors.white,
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
