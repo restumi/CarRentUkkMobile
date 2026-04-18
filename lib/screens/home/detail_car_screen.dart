@@ -6,6 +6,7 @@ import 'package:car_rent_mobile_app/services/models/driver_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
+import 'package:intl/intl.dart';
 
 class DetailCarScreen extends StatefulWidget {
   final Map<String, dynamic> carData;
@@ -67,6 +68,18 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
           'driver': _selectedDriver
         }
       );
+    }
+
+    String formatRupiah(num? amount) {
+      if (amount == null) return '-';
+      
+      final formatter = NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: 'Rp ',
+        decimalDigits: 0,
+      );
+      
+      return formatter.format(amount);
     }
 
     return Scaffold(
@@ -288,7 +301,7 @@ class _DetailCarScreenState extends State<DetailCarScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Rp ${widget.carData['pricePerDay'] ?? 350.000} / day",
+                    "${formatRupiah(widget.carData['pricePerDay'])} / day",
                     style: GoogleFonts.rubik(
                       color: AppColors.white,
                       fontSize: 18,

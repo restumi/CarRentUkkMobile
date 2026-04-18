@@ -143,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () => _temrs(context),
                       ),
                       _buildMenuItem(
-                        icon: Icons.article,
+                        icon: Icons.chat,
                         title: "Chat Admin",
                         onTap: () => _chat(context),
                       ),

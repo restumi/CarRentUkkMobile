@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
 import '../../widgets/bottom_navbar.dart';
 import 'package:car_rent_mobile_app/services/models/car_model.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -107,6 +108,18 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.refresh),
         ),
       );
+    }
+
+    String formatRupiah(num? amount) {
+      if (amount == null) return '-';
+      
+      final formatter = NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: 'Rp ',
+        decimalDigits: 0,
+      );
+      
+      return formatter.format(amount);
     }
 
     return Scaffold(
@@ -243,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "Rp${car.pricePerDay}",
+                                          formatRupiah(car.pricePerDay),
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 14,

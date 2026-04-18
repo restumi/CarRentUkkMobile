@@ -5,6 +5,7 @@ import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../styles/app_color.dart';
+import 'package:intl/intl.dart';
 
 class HistoryTransactionScreen extends StatefulWidget {
   const HistoryTransactionScreen({super.key});
@@ -78,7 +79,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
       "status": status,
       "image": "${AppConfig.storageUrl}/${car['image']}",
       "payment_status": tx['payment_status'],
-      "total_price": tx['total_price'].toString(),
+      "total_price": tx['total_price'],
       "driver": driver?['name'] ?? "without driver",
     };
   }
@@ -120,6 +121,18 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
     final filtered = _transaction
         .where((t) => t['status'] == selectedFilter)
         .toList();
+
+    String formatRupiah(num? amount) {
+      if (amount == null) return '-';
+      
+      final formatter = NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: 'Rp ',
+        decimalDigits: 0,
+      );
+      
+      return formatter.format(amount);
+    }
 
     return Scaffold(
       backgroundColor: AppColors.black,
@@ -270,7 +283,7 @@ class _TransactionScreenState extends State<HistoryTransactionScreen> {
                                       ),
                                     ),
                                     Text(
-                                      trx["total_price"],
+                                      formatRupiah(trx["total_price"]),
                                       style: GoogleFonts.rubik(
                                         color: AppColors.white,
                                         fontSize: 14,

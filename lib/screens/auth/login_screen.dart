@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
         String message = _getErrorMessage(rawMessage);
         
         _showErrorSnackBar(context, message);
-        print('❌❌: $message');
       }
       
     } catch (e) {
@@ -99,7 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     
-    // Fallback: parse cara lama
     if (msg.contains('Login gagal:')) {
       return msg.split('Login gagal:').last.trim();
     }
