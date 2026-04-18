@@ -52,6 +52,9 @@ class ApiService {
     final uri = Uri.parse('$baseUrl/register');
     final request = http.MultipartRequest('POST', uri);
 
+    request.headers['ngrok-skip-browser-warning'] = 'true';
+    request.headers['Accept'] = 'application/json';
+
     request.fields['name'] = name;
     request.fields['email'] = email;
     request.fields['password'] = password;
@@ -197,7 +200,7 @@ class ApiService {
   // ====================== CHAT ======================
 
   static Future<ChatMessage> sendMessage(
-    int adminId, 
+    int adminId,
     String message,
     String token,
   ) async {
@@ -207,10 +210,7 @@ class ApiService {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode({
-        'receiver_id': adminId,
-        'message': message,
-      }),
+      body: jsonEncode({'receiver_id': adminId, 'message': message}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -220,7 +220,10 @@ class ApiService {
     }
   }
 
-  static Future<List<ChatMessage>> getMessages(int adminId, String token) async {
+  static Future<List<ChatMessage>> getMessages(
+    int adminId,
+    String token,
+  ) async {
     final response = await http.get(
       Uri.parse('$baseUrl/messages/$adminId'),
       headers: {

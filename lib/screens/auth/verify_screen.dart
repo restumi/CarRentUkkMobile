@@ -1,10 +1,13 @@
 import 'dart:io';
+// import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
 import 'package:car_rent_mobile_app/routes/app_route.dart';
 import 'package:car_rent_mobile_app/services/api_service.dart';
 import 'package:car_rent_mobile_app/services/micro_services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:car_rent_mobile_app/styles/app_color.dart';
+import 'dart:convert';
 
 class VerificationScreen extends StatefulWidget {
   final String name;
@@ -88,9 +91,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
         if (mounted) Navigator.pop(context);
 
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error: $e')));
+          String rawMessage = e.toString();
+          String message = _getErrorMessage(rawMessage);
+          
+          _showErrorSnackBar(context, message);
         }
       }
     } else {
@@ -101,6 +105,75 @@ class _VerificationScreenState extends State<VerificationScreen> {
         _autoValidateMode = AutovalidateMode.always;
       });
     }
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message, style: const TextStyle(color: Colors.white))),
+          ],
+        ),
+        backgroundColor: AppColors.red,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
+  String _getErrorMessage(dynamic error) {
+    final msg = error.toString();
+    
+    final jsonStart = msg.indexOf('{');
+    final jsonEnd = msg.lastIndexOf('}') + 1;
+    
+    if (jsonStart != -1 && jsonEnd > jsonStart && jsonEnd <= msg.length) {
+      try {
+        final jsonString = msg.substring(jsonStart, jsonEnd);
+        final jsonData = jsonDecode(jsonString);
+        
+        if (jsonData.containsKey('errors') && jsonData['errors'] is Map) {
+          final errors = jsonData['errors'] as Map<String, dynamic>;
+          
+          final List<String> errorMessages = [];
+          errors.forEach((field, messages) {
+            if (messages is List) {
+              errorMessages.addAll(messages.map((m) => m.toString()));
+            } else {
+              errorMessages.add(messages.toString());
+            }
+          });
+          
+          return errorMessages.isNotEmpty ? errorMessages.first : 'Validasi gagal';
+        }
+        
+        if (jsonData.containsKey('message')) {
+          return jsonData['message'].toString();
+        }
+        
+        if (jsonData.containsKey('error')) {
+          return jsonData['error'].toString();
+        }
+        
+        return 'Terjadi kesalahan';
+      } catch (e) {
+        print('⚠️ Failed to parse JSON: $e');
+      }
+    }
+    
+    String cleanMsg = msg;
+    if (cleanMsg.contains('register gagal:')) {
+      cleanMsg = cleanMsg.split('register gagal:').last.trim();
+    }
+    if (cleanMsg.startsWith('Exception: ')) {
+      cleanMsg = cleanMsg.substring('Exception: '.length);
+    }
+    
+    return cleanMsg.length > 100 ? 'Terjadi kesalahan, silakan coba lagi' : cleanMsg;
   }
 
   InputDecoration _inputDecoration(

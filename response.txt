@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://unpencilled-vinita-unsurgically.ngrok-free.dev'" />
+
+        <title>Redirecting to http://unpencilled-vinita-unsurgically.ngrok-free.dev</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://unpencilled-vinita-unsurgically.ngrok-free.dev">http://unpencilled-vinita-unsurgically.ngrok-free.dev</a>.
+    </body>
+</html>

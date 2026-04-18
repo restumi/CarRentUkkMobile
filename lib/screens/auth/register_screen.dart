@@ -145,8 +145,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (value == null || value.isEmpty) {
                               return "Email tidak boleh kosong";
                             }
+                            
+                            final emailRegex = RegExp(
+                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                            );
+                            
+                            if (!emailRegex.hasMatch(value)) {
+                              return "Format email tidak valid";
+                            }
+                            
                             return null;
                           },
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                         ),
                         const SizedBox(height: 16),
 

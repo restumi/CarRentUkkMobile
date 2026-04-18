@@ -14,6 +14,7 @@ class WaitingScreen extends StatefulWidget {
 
 class _WaitingScreenState extends State<WaitingScreen> {
   String? _status;
+  String? _rejectReason;
   bool _loading = true;
 
   @override
@@ -40,22 +41,37 @@ class _WaitingScreenState extends State<WaitingScreen> {
       final response = await ApiService.getStatus(email);
 
       if (response['success'] == true) {
-        final newStatus = response['data'];
+        final data = response['data'] as Map<String, dynamic>;
+        final newStatus = data['status'] as String;
+        final newRejectReason = data['reject_reason'] as String?;
 
-        await AuthService.saveVerifyData(email: email, status: newStatus);
+        await AuthService.saveVerifyData(
+          email: email, 
+          status: newStatus,
+        );
 
         if (mounted) {
           setState(() {
             _status = newStatus;
+            _rejectReason = newRejectReason;
             _loading = false;
           });
         }
 
-        if (newStatus == 'approved') {
-          if (mounted) {
+        if (mounted) {
+          if (newStatus == 'approved') {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Silahkan login menggunakan akun anda!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else if (newStatus == 'rejected' && newRejectReason != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Alasan ditolak: $newRejectReason'),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 6),
               ),
             );
           }
@@ -65,7 +81,10 @@ class _WaitingScreenState extends State<WaitingScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Data anda ditolak, Lakukan registrasi ulang!'))
+            const SnackBar(
+              content: Text('Data anda ditolak, Lakukan registrasi ulang!'),
+              backgroundColor: Colors.orange,
+            )
           );
         }
       }
@@ -75,6 +94,7 @@ class _WaitingScreenState extends State<WaitingScreen> {
       if (mounted) {
         setState(() {
           _status = localStatus ?? 'pending';
+          _rejectReason = null;
           _loading = false;
         });
       }
@@ -145,6 +165,14 @@ class _WaitingScreenState extends State<WaitingScreen> {
                     "note : mohon tunggu, admin akan memverifikasi data anda. "
                     "Jika status berubah menjadi “approve” silahkan login. "
                     "Jika “rejected” lakukan registrasi ulang.",
+                    style: GoogleFonts.rubik(
+                      fontSize: 12,
+                      color: Colors.white70,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "Alasan ditolak : ${_loading ? 'memuat' : _rejectReason ?? '-'}",
                     style: GoogleFonts.rubik(
                       fontSize: 12,
                       color: Colors.white70,
